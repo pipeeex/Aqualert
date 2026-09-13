@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Carpeta donde se guarda temporalmente la foto tomada con la camara -->
+    <cache-path
+        name="fotos_cache"
+        path="fotos/" />
+    <external-files-path
+        name="fotos_externas"
+        path="Pictures/" />
+</paths>

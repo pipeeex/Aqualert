@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Evidencia simulada 5 para la demo CRUD (reemplaza a la foto de camara) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="240dp"
+    android:viewportWidth="360"
+    android:viewportHeight="240">
+
+    <path android:fillColor="#B7A8B0" android:pathData="M0,0h360v240h-360z" />
+    <path android:fillColor="#7A6B74" android:pathData="M0,150 C60,120 120,170 180,145 C240,120 300,160 360,135 L360,240 L0,240 Z" />
+    <path android:fillColor="#574B52" android:pathData="M0,185 C70,165 140,200 210,180 C270,163 320,190 360,175 L360,240 L0,240 Z" />
+    <path android:fillColor="#33FFFFFF" android:pathData="M70,215 m-30,0 a30,13 0 1,0 60,0 a30,13 0 1,0 -60,0" />
+</vector>

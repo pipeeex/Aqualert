@@ -6,6 +6,7 @@ import com.aqualer.app.util.Constantes
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.aqualer.app.data.estado.TipoContaminacion
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -38,6 +39,18 @@ data class Reporte(
     val titulo: String = "",
     val descripcion: String = "",
 
+    /** Tipo de contaminacion elegido en la lista desplegable. */
+    val tipo: TipoContaminacion = TipoContaminacion.BASURAS,
+
+    /** Nivel de riesgo elegido con los botones de radio. */
+    val nivelRiesgo: NivelRiesgo = NivelRiesgo.BAJO,
+
+    /** Casilla de verificacion: el caso requiere atencion prioritaria. */
+    val atencionUrgente: Boolean = false,
+
+    /** Casilla de verificacion: ocultar el nombre del autor en el listado. */
+    val publicarAnonimo: Boolean = false,
+
     /** Georreferenciacion: latitud, longitud y direccion del diagrama. */
     val ubicacion: Ubicacion = Ubicacion(),
 
@@ -69,6 +82,11 @@ data class Reporte(
 
     /** Confianza en porcentaje entero, para mostrarla en la interfaz. */
     val confianzaPorcentaje: Int get() = (confianzaIa * 100).toInt()
+
+    /** Nombre que se muestra en el listado, respetando la casilla de anonimato. */
+    val autorVisible: String
+        get() = if (publicarAnonimo) "Reporte anonimo"
+        else nombreUsuario.ifBlank { "Usuario" }
 
     /** La clasificacion supero el umbral definido para el modelo. */
     val clasificacionConfiable: Boolean
@@ -121,6 +139,10 @@ data class Reporte(
         CAMPO_NOMBRE_USUARIO to nombreUsuario,
         CAMPO_TITULO to titulo.trim(),
         CAMPO_DESCRIPCION to descripcion.trim(),
+        CAMPO_TIPO to tipo.valor,
+        CAMPO_NIVEL_RIESGO to nivelRiesgo.valor,
+        CAMPO_ATENCION_URGENTE to atencionUrgente,
+        CAMPO_PUBLICAR_ANONIMO to publicarAnonimo,
         CAMPO_UBICACION to ubicacion.aMapa(),
         CAMPO_IMAGEN_URL to imagenUrl,
         CAMPO_ESTADO to estado.valor,
@@ -136,6 +158,11 @@ data class Reporte(
         const val CAMPO_NOMBRE_USUARIO = "nombre_usuario"
         const val CAMPO_TITULO = "titulo"
         const val CAMPO_DESCRIPCION = "descripcion"
+
+        const val CAMPO_TIPO = "tipo"
+        const val CAMPO_NIVEL_RIESGO = "nivel_riesgo"
+        const val CAMPO_ATENCION_URGENTE = "atencion_urgente"
+        const val CAMPO_PUBLICAR_ANONIMO = "publicar_anonimo"
         const val CAMPO_UBICACION = "ubicacion"
         const val CAMPO_IMAGEN_URL = "imagen_url"
         const val CAMPO_ESTADO = "estado"
@@ -152,6 +179,10 @@ data class Reporte(
             nombreUsuario = doc.getString(CAMPO_NOMBRE_USUARIO).orEmpty(),
             titulo = doc.getString(CAMPO_TITULO).orEmpty(),
             descripcion = doc.getString(CAMPO_DESCRIPCION).orEmpty(),
+            tipo = TipoContaminacion.desde(doc.getString(CAMPO_TIPO)),
+            nivelRiesgo = NivelRiesgo.desde(doc.getString(CAMPO_NIVEL_RIESGO)),
+            atencionUrgente = doc.getBoolean(CAMPO_ATENCION_URGENTE) ?: false,
+            publicarAnonimo = doc.getBoolean(CAMPO_PUBLICAR_ANONIMO) ?: false,
             ubicacion = Ubicacion.desde(doc.get(CAMPO_UBICACION) as? Map<String, Any?>),
             imagenUrl = doc.getString(CAMPO_IMAGEN_URL).orEmpty(),
             estado = EstadoReporte.desde(doc.getString(CAMPO_ESTADO)),

@@ -61,6 +61,30 @@
     <string name="rep_confianza_ia">Confianza: %1$d%%</string>
 
     <!-- Estados del reporte (diagrama de estados) -->
+    <!-- ===== Demo CRUD de reportes ===== -->
+    <string name="rep_editar_titulo">Editar reporte</string>
+    <string name="rep_actualizar">Actualizar reporte</string>
+    <string name="rep_eliminar">Eliminar reporte</string>
+    <string name="rep_urgente">URGENTE</string>
+    <string name="rep_contador">%1$d reportes</string>
+    <string name="rep_estado_actual">Estado actual: %1$s</string>
+    <string name="rep_evidencia_ayuda">Toca la imagen para cambiar la evidencia de muestra</string>
+    <string name="rep_cambiar_evidencia">Cambiar evidencia</string>
+    <string name="rep_evidencia_contador">%1$d / %2$d</string>
+    <string name="rep_tipo_contaminacion">Tipo de contaminacion</string>
+    <string name="rep_nivel_riesgo">Nivel de riesgo</string>
+    <string name="rep_nivel_riesgo_ayuda">Determina la prioridad de atencion de la alerta</string>
+    <string name="rep_opciones">Opciones del reporte</string>
+    <string name="rep_check_urgente">Requiere atencion urgente</string>
+    <string name="rep_check_anonimo">Publicar sin mostrar mi nombre</string>
+    <string name="rep_simular_ubicacion">Simular otra ubicacion</string>
+    <string name="rep_ver_reportes">Ver reportes de contaminacion</string>
+
+    <!-- Niveles de riesgo (clase Alerta) -->
+    <string name="riesgo_bajo">Bajo - contaminacion puntual</string>
+    <string name="riesgo_medio">Medio - afecta un tramo del canal</string>
+    <string name="riesgo_alto">Alto - riesgo para la salud</string>
+    <string name="riesgo_critico">Critico - atencion inmediata</string>
     <string name="estado_borrador">Borrador</string>
     <string name="estado_en_revision">En revision</string>
     <string name="estado_publicado">Publicado</string>

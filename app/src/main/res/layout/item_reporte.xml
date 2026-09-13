@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Aqualert.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_l"
+    android:layout_marginTop="@dimen/space_s"
+    android:layout_marginEnd="@dimen/space_l"
+    android:layout_marginBottom="@dimen/space_s"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- ImageView: evidencia fotografica -->
+        <ImageView
+            android:id="@+id/imgEvidencia"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_report_image"
+            android:contentDescription="@string/cd_foto_reporte"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/foto_demo_1" />
+
+        <!-- Etiqueta de estado sobre la imagen -->
+        <TextView
+            android:id="@+id/txtEstado"
+            style="@style/Widget.Aqualert.EstadoBadge"
+            android:layout_margin="@dimen/space_s"
+            android:backgroundTint="@color/estado_publicado"
+            app:layout_constraintStart_toStartOf="@id/imgEvidencia"
+            app:layout_constraintTop_toTopOf="@id/imgEvidencia"
+            tools:text="Publicado" />
+
+        <!-- Marca de atencion urgente (casilla de verificacion) -->
+        <TextView
+            android:id="@+id/txtUrgente"
+            style="@style/Widget.Aqualert.EstadoBadge"
+            android:layout_margin="@dimen/space_s"
+            android:backgroundTint="@color/state_danger"
+            android:text="@string/rep_urgente"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/imgEvidencia"
+            app:layout_constraintTop_toTopOf="@id/imgEvidencia"
+            tools:visibility="visible" />
+
+        <!-- Titulo -->
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_m"
+            android:layout_marginEnd="@dimen/space_s"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Aqualert.Subtitle"
+            app:layout_constraintEnd_toStartOf="@id/btnEliminar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgEvidencia"
+            tools:text="Basura acumulada en el canal del rio Fucha" />
+
+        <!-- Boton eliminar (DELETE del CRUD) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEliminar"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_s"
+            android:contentDescription="@string/rep_eliminar"
+            app:icon="@drawable/ic_eliminar"
+            app:iconTint="@color/state_danger"
+            app:layout_constraintBottom_toBottomOf="@id/txtTitulo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtTitulo" />
+
+        <!-- Descripcion -->
+        <TextView
+            android:id="@+id/txtDescripcion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_xs"
+            android:layout_marginEnd="@dimen/space_l"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Aqualert.Body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+            tools:text="Se observa gran cantidad de residuos solidos flotando cerca del puente." />
+
+        <!-- Tipo de contaminacion (lista desplegable) -->
+        <TextView
+            android:id="@+id/txtTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_s"
+            android:background="@drawable/bg_chip_suave"
+            android:paddingStart="@dimen/space_s"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingEnd="@dimen/space_s"
+            android:paddingBottom="@dimen/space_xs"
+            android:textColor="@color/fluent_accent_dark"
+            android:textSize="@dimen/text_caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtDescripcion"
+            tools:text="Basuras y residuos solidos" />
+
+        <!-- Nivel de riesgo (botones de radio) -->
+        <TextView
+            android:id="@+id/txtRiesgo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_s"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/text_caption"
+            app:layout_constraintBottom_toBottomOf="@id/txtTipo"
+            app:layout_constraintStart_toEndOf="@id/txtTipo"
+            app:layout_constraintTop_toTopOf="@id/txtTipo"
+            tools:text="ALTO" />
+
+        <!-- Pie: autor y fecha -->
+        <TextView
+            android:id="@+id/txtAutor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_m"
+            android:layout_marginBottom="@dimen/space_m"
+            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTipo"
+            tools:text="Felipe Villaquiran" />
+
+        <TextView
+            android:id="@+id/txtFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_l"
+            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+            app:layout_constraintBottom_toBottomOf="@id/txtAutor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtAutor"
+            tools:text="12 sep 2026, 14:30" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
