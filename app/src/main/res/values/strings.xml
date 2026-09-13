@@ -1,3 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Aqualert</string>
+    <string name="app_tagline">Cuidemos juntos nuestros canales hidricos</string>
+
+    <!-- ===== Autenticacion (RF0001) ===== -->
+    <string name="auth_iniciar_sesion">Iniciar sesion</string>
+    <string name="auth_registrarse">Registrarse</string>
+    <string name="auth_crear_cuenta">Crear cuenta</string>
+    <string name="auth_email">Correo electronico</string>
+    <string name="auth_password">Contrasena</string>
+    <string name="auth_password_confirmar">Confirmar contrasena</string>
+    <string name="auth_nombre">Nombre completo</string>
+    <string name="auth_olvide_password">Olvide mi contrasena</string>
+    <string name="auth_recuperar_password">Recuperar contrasena</string>
+    <string name="auth_no_tengo_cuenta">No tengo cuenta, quiero registrarme</string>
+    <string name="auth_ya_tengo_cuenta">Ya tengo cuenta, iniciar sesion</string>
+    <string name="auth_entrar_visitante">Entrar como visitante</string>
+    <string name="auth_cerrar_sesion">Cerrar sesion</string>
+    <string name="auth_bienvenido">Bienvenido de nuevo</string>
+    <string name="auth_correo_enviado">Te enviamos un correo para restablecer tu contrasena</string>
+
+    <!-- Validaciones -->
+    <string name="val_campo_obligatorio">Este campo es obligatorio</string>
+    <string name="val_email_invalido">Ingresa un correo valido</string>
+    <string name="val_password_corta">La contrasena debe tener al menos 6 caracteres</string>
+    <string name="val_password_no_coincide">Las contrasenas no coinciden</string>
+    <string name="val_nombre_corto">Ingresa tu nombre completo</string>
+
+    <!-- ===== Navegacion principal ===== -->
+    <string name="nav_reportes">Reportes</string>
+    <string name="nav_mapa">Mapa</string>
+    <string name="nav_crear">Reportar</string>
+    <string name="nav_consejos">Consejos</string>
+    <string name="nav_perfil">Perfil</string>
+    <string name="nav_chatbot">Asistente</string>
+
+    <!-- ===== Reportes (RF0002, RF0003, RF0004) ===== -->
+    <string name="rep_titulo_listado">Reportes de contaminacion</string>
+    <string name="rep_crear_titulo">Nuevo reporte</string>
+    <string name="rep_campo_titulo">Titulo del reporte</string>
+    <string name="rep_campo_descripcion">Describe lo que observaste</string>
+    <string name="rep_foto_evidencia">Foto de evidencia</string>
+    <string name="rep_tomar_foto">Tomar foto</string>
+    <string name="rep_elegir_galeria">Elegir de galeria</string>
+    <string name="rep_ubicacion">Ubicacion</string>
+    <string name="rep_obtener_ubicacion">Usar mi ubicacion actual</string>
+    <string name="rep_ubicacion_mapa">Marcar en el mapa</string>
+    <string name="rep_enviar">Enviar reporte</string>
+    <string name="rep_guardar_borrador">Guardar borrador</string>
+    <string name="rep_cancelar">Cancelar</string>
+    <string name="rep_buscar">Buscar reportes</string>
+    <string name="rep_filtrar">Filtrar</string>
+    <string name="rep_filtro_estado">Filtrar por estado</string>
+    <string name="rep_filtro_fecha">Filtrar por fecha</string>
+    <string name="rep_sin_reportes">Aun no hay reportes publicados</string>
+    <string name="rep_creado_ok">Reporte enviado correctamente</string>
+    <string name="rep_detalle">Detalle del reporte</string>
+    <string name="rep_ver_en_mapa">Ver en el mapa</string>
+    <string name="rep_clasificacion_ia">Clasificacion automatica</string>
+    <string name="rep_confianza_ia">Confianza: %1$d%%</string>
+
+    <!-- Estados del reporte (diagrama de estados) -->
+    <string name="estado_borrador">Borrador</string>
+    <string name="estado_en_revision">En revision</string>
+    <string name="estado_publicado">Publicado</string>
+    <string name="estado_verificado">Verificado</string>
+    <string name="estado_en_atencion">En atencion</string>
+    <string name="estado_resuelto">Resuelto</string>
+    <string name="estado_rechazado">Rechazado</string>
+    <string name="estado_archivado">Archivado</string>
+    <string name="estado_cancelado">Cancelado</string>
+    <string name="estado_eliminado">Eliminado</string>
+
+    <!-- ===== Comentarios ===== -->
+    <string name="com_titulo">Comentarios</string>
+    <string name="com_escribir">Escribe un comentario o propon una solucion</string>
+    <string name="com_publicar">Publicar</string>
+    <string name="com_sin_comentarios">Se el primero en comentar</string>
+    <string name="com_eliminar">Eliminar comentario</string>
+    <string name="com_ocultar">Ocultar comentario</string>
+    <string name="com_restaurar">Restaurar comentario</string>
+    <string name="com_oculto">Comentario oculto por moderacion</string>
+
+    <!-- ===== Consejos (RF0005) ===== -->
+    <string name="con_titulo">Cuidado del agua</string>
+    <string name="con_subtitulo">Consejos y recomendaciones para preservar nuestros canales hidricos</string>
+    <string name="con_sin_consejos">Pronto publicaremos nuevos consejos</string>
+
+    <!-- ===== Chatbot ===== -->
+    <string name="chat_titulo">Asistente Aqualert</string>
+    <string name="chat_escribir">Escribe tu pregunta</string>
+    <string name="chat_enviar">Enviar</string>
+    <string name="chat_saludo">Hola, soy el asistente de Aqualert. Puedo ayudarte a reportar contaminacion o resolver dudas sobre el cuidado del agua.</string>
+    <string name="chat_preguntas_frecuentes">Preguntas frecuentes</string>
+    <string name="chat_escribiendo">Escribiendo…</string>
+
+    <!-- ===== Perfil ===== -->
+    <string name="perfil_titulo">Mi perfil</string>
+    <string name="perfil_editar">Editar perfil</string>
+    <string name="perfil_mis_reportes">Mis reportes</string>
+    <string name="perfil_notificaciones">Notificaciones</string>
+    <string name="perfil_guardar">Guardar cambios</string>
+
+    <!-- ===== Administrador ===== -->
+    <string name="admin_titulo">Panel de administracion</string>
+    <string name="admin_gestionar_reportes">Gestionar reportes</string>
+    <string name="admin_gestionar_comentarios">Gestionar comentarios</string>
+    <string name="admin_gestionar_usuarios">Gestionar usuarios</string>
+    <string name="admin_verificar">Verificar reporte</string>
+    <string name="admin_cambiar_estado">Cambiar estado</string>
+    <string name="admin_observacion">Registrar observacion</string>
+    <string name="admin_bloquear_usuario">Bloquear usuario</string>
+    <string name="admin_habilitar_usuario">Habilitar usuario</string>
+
+    <!-- ===== Alertas y notificaciones ===== -->
+    <string name="alerta_titulo">Alertas</string>
+    <string name="notif_canal_nombre">Alertas de Aqualert</string>
+    <string name="notif_canal_desc">Avisos sobre reportes y alertas de contaminacion</string>
+
+    <!-- ===== Mensajes generales ===== -->
+    <string name="msg_sin_conexion">Sin conexion a internet. Revisa tu red e intenta de nuevo.</string>
+    <string name="msg_error_generico">Ocurrio un error. Intenta nuevamente.</string>
+    <string name="msg_cargando">Cargando…</string>
+    <string name="msg_reintentar">Reintentar</string>
+    <string name="msg_aceptar">Aceptar</string>
+    <string name="msg_cancelar">Cancelar</string>
+    <string name="msg_permiso_ubicacion">Necesitamos tu ubicacion para registrar el reporte en el mapa</string>
+    <string name="msg_permiso_camara">Necesitamos la camara para tomar la foto de evidencia</string>
+    <string name="msg_solo_registrados">Debes iniciar sesion para realizar esta accion</string>
+
+    <!-- Accesibilidad -->
+    <string name="cd_foto_reporte">Foto de evidencia del reporte</string>
+    <string name="cd_avatar">Foto de perfil</string>
+    <string name="cd_volver">Volver</string>
 </resources>

@@ -1,9 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Aqualert" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+
+    <!-- ============================================================
+         Tema principal de Aqualert
+         Basado en Microsoft Fluent Design System (RNF001):
+         acento azul dominante, neutrales calidos, esquinas suaves,
+         elevacion sutil y jerarquia tipografica clara.
+         ============================================================ -->
+    <style name="Theme.Aqualert" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Acento primario -->
+        <item name="colorPrimary">@color/fluent_accent</item>
+        <item name="colorOnPrimary">@color/neutral_white</item>
+        <item name="colorPrimaryContainer">@color/fluent_accent_lighter</item>
+        <item name="colorOnPrimaryContainer">@color/fluent_accent_darker</item>
+
+        <!-- Acento secundario (verde agua) -->
+        <item name="colorSecondary">@color/fluent_teal</item>
+        <item name="colorOnSecondary">@color/neutral_white</item>
+        <item name="colorSecondaryContainer">@color/fluent_teal_light</item>
+        <item name="colorOnSecondaryContainer">@color/fluent_teal_dark</item>
+
+        <!-- Superficies -->
+        <item name="android:colorBackground">@color/surface_background</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/neutral_grey130</item>
+        <item name="colorSurfaceVariant">@color/neutral_grey04</item>
+        <item name="colorOnSurfaceVariant">@color/neutral_grey60</item>
+        <item name="colorOutline">@color/surface_stroke</item>
+        <item name="colorOutlineVariant">@color/neutral_grey12</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/state_danger</item>
+        <item name="colorOnError">@color/neutral_white</item>
+        <item name="colorErrorContainer">@color/state_danger_bg</item>
+
+        <!-- Barras del sistema -->
+        <item name="android:statusBarColor">@color/surface_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/surface_card</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+
+        <!-- Estilos por defecto de los componentes -->
+        <item name="materialButtonStyle">@style/Widget.Aqualert.Button</item>
+        <item name="materialCardViewStyle">@style/Widget.Aqualert.Card</item>
+        <item name="textInputStyle">@style/Widget.Aqualert.TextInput</item>
+        <item name="toolbarStyle">@style/Widget.Aqualert.Toolbar</item>
+        <item name="chipStyle">@style/Widget.Aqualert.Chip</item>
+        <item name="bottomNavigationStyle">@style/Widget.Aqualert.BottomNav</item>
+
+        <!-- Tipografia -->
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Aqualert.Title</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Aqualert.Subtitle</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Aqualert.Body</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Aqualert.Caption</item>
     </style>
 
-    <style name="Theme.Aqualert" parent="Base.Theme.Aqualert" />
+    <!-- Tema del splash: mismo tema con fondo de acento -->
+    <style name="Theme.Aqualert.Splash" parent="Theme.Aqualert">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:statusBarColor">@color/fluent_accent_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- ================= Tipografia Fluent ================= -->
+    <style name="TextAppearance.Aqualert.Display" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">@dimen/text_display</item>
+        <item name="android:textColor">@color/neutral_grey130</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="TextAppearance.Aqualert.Title" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textColor">@color/neutral_grey130</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.Aqualert.Subtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">@dimen/text_subtitle</item>
+        <item name="android:textColor">@color/neutral_grey130</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.Aqualert.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/neutral_grey90</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.Aqualert.Caption" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/neutral_grey60</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- ================= Componentes ================= -->
+
+    <!-- Boton primario Fluent: relleno de acento, esquina 4dp, sin sombra fuerte -->
+    <style name="Widget.Aqualert.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/height_button</item>
+        <item name="cornerRadius">@dimen/radius_s</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="elevation">0dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Boton secundario Fluent: borde de 1dp, fondo transparente -->
+    <style name="Widget.Aqualert.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/height_button</item>
+        <item name="cornerRadius">@dimen/radius_s</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="strokeColor">@color/neutral_grey30</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="android:textColor">@color/neutral_grey130</item>
+    </style>
+
+    <!-- Boton de texto -->
+    <style name="Widget.Aqualert.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <!-- Tarjeta Fluent: fondo blanco, borde fino, elevacion minima -->
+    <style name="Widget.Aqualert.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/radius_m</item>
+        <item name="cardElevation">@dimen/elevation_card</item>
+        <item name="cardBackgroundColor">@color/surface_card</item>
+        <item name="strokeColor">@color/surface_stroke</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <!-- Campo de texto Fluent: contorno, esquina 4dp -->
+    <style name="Widget.Aqualert.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_s</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_s</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_s</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_s</item>
+        <item name="boxStrokeColor">@color/fluent_accent</item>
+        <item name="hintTextColor">@color/neutral_grey60</item>
+    </style>
+
+    <style name="Widget.Aqualert.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/surface_card</item>
+        <item name="titleTextColor">@color/neutral_grey130</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Aqualert.Subtitle</item>
+        <item name="navigationIconTint">@color/neutral_grey90</item>
+    </style>
+
+    <style name="Widget.Aqualert.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">@dimen/radius_pill</item>
+        <item name="android:textSize">@dimen/text_caption</item>
+    </style>
+
+    <style name="Widget.Aqualert.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface_card</item>
+        <item name="itemIconTint">@color/selector_bottom_nav</item>
+        <item name="itemTextColor">@color/selector_bottom_nav</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!-- Etiqueta de estado (badge) -->
+    <style name="Widget.Aqualert.EstadoBadge" parent="" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/space_s</item>
+        <item name="android:paddingEnd">@dimen/space_s</item>
+        <item name="android:paddingTop">@dimen/space_xs</item>
+        <item name="android:paddingBottom">@dimen/space_xs</item>
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/neutral_white</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@drawable/bg_badge_estado</item>
+    </style>
+
 </resources>

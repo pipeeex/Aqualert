@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paleta Aqualert basada en Microsoft Fluent Design System (RNF001).
+  Fluent usa un color de acento dominante + neutrales grises + superficies claras.
+  El acento se adapta a la tematica del agua.
+-->
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- ===== Acento primario (Fluent Communication Blue, tono agua) ===== -->
+    <color name="fluent_accent_lighter">#CFE4FA</color>
+    <color name="fluent_accent_light">#6CB8F6</color>
+    <color name="fluent_accent">#0078D4</color>
+    <color name="fluent_accent_dark">#005A9E</color>
+    <color name="fluent_accent_darker">#004578</color>
+
+    <!-- ===== Acento secundario (verde agua / preservacion) ===== -->
+    <color name="fluent_teal_light">#B3E5E0</color>
+    <color name="fluent_teal">#038387</color>
+    <color name="fluent_teal_dark">#026D71</color>
+
+    <!-- ===== Neutrales Fluent ===== -->
+    <color name="neutral_white">#FFFFFF</color>
+    <color name="neutral_grey02">#FAF9F8</color>
+    <color name="neutral_grey04">#F3F2F1</color>
+    <color name="neutral_grey08">#EDEBE9</color>
+    <color name="neutral_grey12">#E1DFDD</color>
+    <color name="neutral_grey20">#D2D0CE</color>
+    <color name="neutral_grey30">#C8C6C4</color>
+    <color name="neutral_grey60">#605E5C</color>
+    <color name="neutral_grey90">#323130</color>
+    <color name="neutral_grey130">#1B1A19</color>
+    <color name="neutral_black">#000000</color>
+
+    <!-- ===== Colores semanticos de estado ===== -->
+    <color name="state_success">#107C10</color>
+    <color name="state_success_bg">#DFF6DD</color>
+    <color name="state_warning">#797673</color>
+    <color name="state_warning_bg">#FFF4CE</color>
+    <color name="state_danger">#A4262C</color>
+    <color name="state_danger_bg">#FDE7E9</color>
+    <color name="state_info">#0078D4</color>
+    <color name="state_info_bg">#EFF6FC</color>
+
+    <!-- ===== Colores por estado del Reporte (diagrama de estados) ===== -->
+    <color name="estado_borrador">#8A8886</color>
+    <color name="estado_en_revision">#8764B8</color>
+    <color name="estado_publicado">#0078D4</color>
+    <color name="estado_verificado">#038387</color>
+    <color name="estado_en_atencion">#CA5010</color>
+    <color name="estado_resuelto">#107C10</color>
+    <color name="estado_rechazado">#A4262C</color>
+    <color name="estado_archivado">#605E5C</color>
+    <color name="estado_cancelado">#797673</color>
+    <color name="estado_eliminado">#605E5C</color>
+
+    <!-- ===== Nivel de riesgo de la Alerta ===== -->
+    <color name="riesgo_bajo">#107C10</color>
+    <color name="riesgo_medio">#CA5010</color>
+    <color name="riesgo_alto">#A4262C</color>
+    <color name="riesgo_critico">#750B1C</color>
+
+    <!-- ===== Superficies ===== -->
+    <color name="surface_background">#FAF9F8</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_stroke">#E1DFDD</color>
+    <color name="scrim">#66000000</color>
+
 </resources>

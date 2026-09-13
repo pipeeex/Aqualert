@@ -1,4 +1,7 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Archivo de build raiz del proyecto Aqualert
 plugins {
-    alias(libs.plugins.android.application) apply false
+    id("com.android.application") version "8.7.3" apply false
+    id("org.jetbrains.kotlin.android") version "2.0.21" apply false
+    id("com.google.gms.google-services") version "4.5.0" apply false
+    id("androidx.navigation.safeargs.kotlin") version "2.8.5" apply false
 }

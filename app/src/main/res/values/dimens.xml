@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escala de espaciado y radios segun Fluent Design -->
+<resources>
+
+    <!-- Espaciado (multiplos de 4) -->
+    <dimen name="space_xxs">2dp</dimen>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">12dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+
+    <!-- Radios: Fluent usa esquinas suaves de 4dp, 8dp en tarjetas -->
+    <dimen name="radius_xs">2dp</dimen>
+    <dimen name="radius_s">4dp</dimen>
+    <dimen name="radius_m">8dp</dimen>
+    <dimen name="radius_l">12dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+
+    <!-- Elevaciones sutiles -->
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="elevation_dialog">8dp</dimen>
+
+    <!-- Tipografia Fluent -->
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_body_large">16sp</dimen>
+    <dimen name="text_subtitle">18sp</dimen>
+    <dimen name="text_title">24sp</dimen>
+    <dimen name="text_display">34sp</dimen>
+
+    <!-- Componentes -->
+    <dimen name="height_button">48dp</dimen>
+    <dimen name="height_input">56dp</dimen>
+    <dimen name="size_avatar">40dp</dimen>
+    <dimen name="size_avatar_large">88dp</dimen>
+    <dimen name="height_report_image">180dp</dimen>
+    <dimen name="stroke_width">1dp</dimen>
+
+</resources>
