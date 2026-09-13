@@ -1,0 +1,63 @@
+# ============================================
+#  Aqualert - .gitignore
+# ============================================
+
+# --- Archivos de Gradle ---
+.gradle/
+build/
+*/build/
+local.properties
+gradle-app.setting
+.gradletasknamecache
+
+# --- Android Studio / IntelliJ ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Excepciones utiles del .idea ()
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+
+# --- Salidas de compilacion ---
+*.apk
+*.aab
+*.ap_
+*.aar
+*.dex
+*.class
+bin/
+gen/
+out/
+release/
+
+# --- Firmas y llaves () ---
+*.jks
+*.keystore
+keystore.properties
+
+# --- CREDENCIALES DE AQUALERT () ---
+# La API key de Google Maps vive en local.properties (ya ignorado arriba)
+# Configuracion de Firebase:
+app/google-services.json
+google-services.json
+
+# --- Logs y temporales ---
+*.log
+*.hprof
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# --- Documentacion generada ---
+/docs/build/
+
+# --- NDK ---
+obj/
+.externalNativeBuild
