@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Entrada de la linea de tiempo de estados.
+  La columna izquierda dibuja el hilo vertical con el punto de color
+  del estado; la derecha, el detalle de la transicion.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_l"
+    android:paddingEnd="@dimen/space_l">
+
+    <!-- Hilo superior -->
+    <View
+        android:id="@+id/lineaSuperior"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/neutral_grey20"
+        app:layout_constraintBottom_toTopOf="@id/puntoEstado"
+        app:layout_constraintEnd_toEndOf="@id/puntoEstado"
+        app:layout_constraintStart_toStartOf="@id/puntoEstado"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Punto del estado -->
+    <View
+        android:id="@+id/puntoEstado"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="@dimen/space_m"
+        android:background="@drawable/bg_punto_estado"
+        android:backgroundTint="@color/estado_publicado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Hilo inferior -->
+    <View
+        android:id="@+id/lineaInferior"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/neutral_grey20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/puntoEstado"
+        app:layout_constraintStart_toStartOf="@id/puntoEstado"
+        app:layout_constraintTop_toBottomOf="@id/puntoEstado" />
+
+    <!-- Detalle de la transicion -->
+    <TextView
+        android:id="@+id/txtEstado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/neutral_grey130"
+        android:textSize="@dimen/text_body"
+        app:layout_constraintEnd_toStartOf="@id/txtFecha"
+        app:layout_constraintStart_toEndOf="@id/puntoEstado"
+        app:layout_constraintTop_toTopOf="@id/puntoEstado"
+        tools:text="Publicado" />
+
+    <TextView
+        android:id="@+id/txtFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+        app:layout_constraintBottom_toBottomOf="@id/txtEstado"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txtEstado"
+        tools:text="09 oct, 14:32" />
+
+    <TextView
+        android:id="@+id/txtResponsable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/puntoEstado"
+        app:layout_constraintTop_toBottomOf="@id/txtEstado"
+        tools:text="Clasificador IA" />
+
+    <TextView
+        android:id="@+id/txtObservacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_xs"
+        android:layout_marginBottom="@dimen/space_m"
+        android:background="@drawable/bg_chip_suave"
+        android:padding="@dimen/space_s"
+        android:textColor="@color/neutral_grey90"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/puntoEstado"
+        app:layout_constraintTop_toBottomOf="@id/txtResponsable"
+        tools:text="Clasificado como basuras (87% de confianza)" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

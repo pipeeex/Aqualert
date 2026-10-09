@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.content.Context
 import com.aqualer.app.data.model.Reporte
 import com.aqualer.app.data.model.Usuario
 import com.aqualer.app.data.service.AuthService
@@ -12,8 +13,6 @@ import com.aqualer.app.util.Recurso
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel del Modulo de Reportes (ReportUI del diagrama de componentes).
- *
  * Expone las cuatro operaciones del CRUD que definen la clase Reporte:
  * crear(), actualizar(), eliminar() y la consulta del listado.
  */
@@ -22,11 +21,11 @@ class ReportesViewModel(
     private val authService: AuthService = AuthService()
 ) : ViewModel() {
 
-    /** Listado de reportes (UC3: Consultar reportes). */
+    /** Listado de reporte. */
     private val _listado = MutableLiveData<Recurso<List<Reporte>>>()
     val listado: LiveData<Recurso<List<Reporte>>> = _listado
 
-    /** Reporte cargado para edicion (UC4: Ver detalle). */
+    /** Reporte cargado para edicion. */
     private val _reporte = MutableLiveData<Recurso<Reporte>>()
     val reporte: LiveData<Recurso<Reporte>> = _reporte
 
@@ -82,7 +81,7 @@ class ReportesViewModel(
     // ===================== CREATE =====================
 
     /** crear(): guarda un reporte nuevo asociado al usuario actual. */
-    fun crearReporte(reporte: Reporte) {
+    fun crearReporte(reporte: Reporte, contexto: Context? = null) {
         val actual = _usuario.value
         if (actual == null || !actual.rol.puedeCrearReportes) {
             _operacion.value = Recurso.Error("Debes iniciar sesion para crear un reporte")
@@ -95,8 +94,22 @@ class ReportesViewModel(
                 uidUsuario = actual.id,
                 nombreUsuario = actual.nombre
             )
-            _operacion.value = when (val resultado = reportesService.crear(conAutor)) {
-                is Recurso.Exito -> Recurso.Exito("Reporte creado correctamente")
+            _operacion.value = when (val resultado = reportesService.crear(conAutor, contexto)) {
+                is Recurso.Exito -> Recurso.Exito("Reporte analizado y publicado correctamente")
+                is Recurso.Error -> resultado
+                else -> Recurso.Cargando
+            }
+        }
+    }
+
+    /** editarYReintentar(): reenvia a clasificacion un reporte rechazado. */
+    fun reintentarClasificacion(reporte: Reporte, contexto: Context? = null) {
+        _operacion.value = Recurso.Cargando
+        viewModelScope.launch {
+            _operacion.value = when (
+                val resultado = reportesService.reintentarClasificacion(reporte, contexto)
+            ) {
+                is Recurso.Exito -> Recurso.Exito("Reporte reenviado y publicado")
                 is Recurso.Error -> resultado
                 else -> Recurso.Cargando
             }

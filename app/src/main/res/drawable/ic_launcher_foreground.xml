@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Primer plano del icono adaptativo de Aqualert.
+
+  Dibujado directamente en el lienzo de 108x108 que exige el icono
+  adaptativo, con el centro visual de la gota en (54, 54).
+
+  La figura mide 40.3 x 56.2 unidades, de modo que cabe completa dentro
+  de la zona segura de 66 unidades de diametro: ningun launcher la
+  recorta, sea cual sea la mascara que aplique el fabricante.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <group android:scaleX="0.55"
-        android:scaleY="0.55"
-        android:translateX="24.3"
-        android:translateY="24.3">
+    <!-- Cuerpo de la gota -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,25.92
+            C54,25.92 33.84,48.96 33.84,61.92
+            C33.84,73.05 42.87,82.08 54,82.08
+            C65.13,82.08 74.16,73.05 74.16,61.92
+            C74.16,48.96 54,25.92 54,25.92 Z" />
 
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M48,10 C48,10 20,42 20,60 C20,75.46 32.54,88 48,88 C63.46,88 76,75.46 76,60 C76,42 48,10 48,10 Z" />
-        <path
-            android:fillColor="#0078D4"
-            android:pathData="M44,40 L52,40 L50.5,64 L45.5,64 Z" />
-        <path
-            android:fillColor="#0078D4"
-            android:pathData="M48,69 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
-    </group>
+    <!-- Barra del signo de alerta -->
+    <path
+        android:fillColor="#0078D4"
+        android:pathData="M51.12,47.52 L56.88,47.52 L55.8,64.8 L52.2,64.8 Z" />
+
+    <!-- Punto del signo de alerta -->
+    <path
+        android:fillColor="#0078D4"
+        android:pathData="M54,68.4 m-2.88,0 a2.88,2.88 0 1,0 5.76,0 a2.88,2.88 0 1,0 -5.76,0" />
 </vector>

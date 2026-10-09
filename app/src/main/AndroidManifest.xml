@@ -2,22 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- RNF005: la app requiere conexion para consultar reportes -->
+    <!-- la app requiere conexion para consultar reportes -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- UC7 / RF0003: registrar ubicacion del reporte -->
+    <!--  registrar ubicacion del reporte -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- UC6 / RF0003: tomar o seleccionar foto de evidencia -->
+    <!--  tomar o seleccionar foto de evidencia -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- Notificaciones push (clase Notificacion) -->
+    <!-- Notificaciones push -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Modulo de Autenticacion (RF0001) -->
+        <!-- Modulo de Autenticacion  -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
@@ -67,10 +67,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Modulo de Reportes (RF0002, RF0003, RF0004) -->
+        <!-- Modulo de Reportes -->
         <activity
             android:name=".ui.reportes.ReportesActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
+
+        <activity
+            android:name=".ui.reportes.DetalleReporteActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.reportes.FormularioReporteActivity"

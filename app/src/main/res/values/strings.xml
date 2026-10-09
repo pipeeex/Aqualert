@@ -157,4 +157,15 @@
     <string name="cd_foto_reporte">Foto de evidencia del reporte</string>
     <string name="cd_avatar">Foto de perfil</string>
     <string name="cd_volver">Volver</string>
+
+    <!-- ===== Detalle del reporte ===== -->
+    <string name="com_acciones">Opciones del comentario</string>
+    <string name="com_contador">Comentarios (%1$d)</string>
+    <string name="det_historial">Historial del reporte</string>
+    <string name="det_analisis">Analisis automatico</string>
+    <string name="det_sin_analisis">Sin analisis disponible</string>
+    <string name="det_editar">Editar reporte</string>
+    <string name="det_revision_humana">Requiere revision humana</string>
+    <string name="det_reintentar">Reenviar a clasificacion</string>
+    <string name="det_debes_iniciar">Inicia sesion para comentar este reporte</string>
 </resources>

@@ -51,7 +51,7 @@ class ReportesActivity : AppCompatActivity() {
 
     private fun configurarLista() {
         adaptador = ReportesAdapter(
-            alTocar = { reporte -> abrirFormulario(reporte.id) },
+            alTocar = { reporte -> abrirDetalle(reporte.id) },
             alPedirEliminar = { reporte -> confirmarEliminacion(reporte) }
         )
 
@@ -141,6 +141,11 @@ class ReportesActivity : AppCompatActivity() {
     private fun abrirFormulario(idReporte: String?) {
         val intent = Intent(this, FormularioReporteActivity::class.java)
         idReporte?.let { intent.putExtra(Constantes.EXTRA_REPORTE_ID, it) }
+        startActivity(intent)
+    }
+    private fun abrirDetalle(idReporte: String) {
+        val intent = Intent(this, DetalleReporteActivity::class.java)
+        intent.putExtra(Constantes.EXTRA_REPORTE_ID, idReporte)
         startActivity(intent)
     }
 

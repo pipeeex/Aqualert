@@ -205,7 +205,7 @@ class FormularioReporteActivity : AppCompatActivity() {
         )
 
         if (modoEdicion) viewModel.actualizarReporte(reporte)
-        else viewModel.crearReporte(reporte)
+        else viewModel.crearReporte(reporte, applicationContext)
     }
 
     private fun confirmarEliminacion(reporte: Reporte) {

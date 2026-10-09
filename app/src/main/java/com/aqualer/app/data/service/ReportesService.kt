@@ -1,79 +1,135 @@
 package com.aqualer.app.data.service
 
+import android.content.Context
+import android.util.Log
 import com.aqualer.app.data.estado.EstadoReporte
 import com.aqualer.app.data.model.HistorialEstado
 import com.aqualer.app.data.model.Reporte
+import com.aqualer.app.data.model.ResultadoClasificacion
+import com.aqualer.app.data.model.ResultadoValidacion
 import com.aqualer.app.util.Constantes
 import com.aqualer.app.util.Recurso
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
-/**
- * Servicio de Reportes (ReportSvc del diagrama de componentes).
- *
- * Implementa las operaciones crear(), actualizar(), eliminar() y
- * cambiarEstado() de la clase Reporte, y los procesos de los
- * diagramas de colaboracion:
- *
- *   Crear Reporte:    1.12 registrar reporte -> 1.13 guardar reporte
- *   Consultar:        1.3 consultar reportes -> 1.4 obtener datos
- *
- * Cada cambio de estado deja una traza en la subcoleccion
- * historial_estados, tal como exige el Modelo Estructural de BD.
+
+/* Cada cambio de estado queda trazado en la subcoleccion historial_estados.
  */
 class ReportesService(
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val clasificador: ClasificadorIA = ClasificadorIAService(),
+    private val alertasService: AlertasService = AlertasService(),
+    private val notificacionesService: NotificacionesService = NotificacionesService()
 ) {
 
     private val coleccion get() = db.collection(Constantes.COL_REPORTES)
 
-    // ==========================================================
-    //  CREATE
-    // ==========================================================
 
-    /**
-     * crear() de la clase Reporte.
-     *
-     * El reporte nace en BORRADOR y, al tener titulo, descripcion y
-     * evidencia, transiciona segun el diagrama de estados. En esta
-     * version de demostracion pasa directo a PUBLICADO porque el
-     * ClasificadorIA aun no esta conectado; cuando lo este, el estado
-     * intermedio sera EN_REVISION.
-     */
-    suspend fun crear(reporte: Reporte): Recurso<String> = try {
-        val validacion = reporte.validar()
-        if (!validacion.esValido) {
-            Recurso.Error(
-                (validacion as com.aqualer.app.data.model.ResultadoValidacion.Invalido)
-                    .primerError
-            )
-        } else {
-            val publicado = reporte.copy(estado = EstadoReporte.PUBLICADO)
-            val referencia = coleccion.add(publicado.aMapa(usarTimestampServidor = true)).await()
+    suspend fun crear(
+        reporte: Reporte,
+        contexto: Context? = null
+    ): Recurso<String> = try {
 
-            registrarHistorial(
-                idReporte = referencia.id,
-                anterior = EstadoReporte.BORRADOR,
-                nuevo = EstadoReporte.PUBLICADO,
-                uidUsuario = reporte.uidUsuario,
-                nombreUsuario = reporte.nombreUsuario,
-                observacion = "Reporte creado"
-            )
+        when (val validacion = reporte.validar()) {
+            is ResultadoValidacion.Invalido -> Recurso.Error(validacion.primerError)
 
-            Recurso.Exito(referencia.id)
+            else -> {
+                // 1. El reporte entra EN_REVISION
+                val enRevision = reporte.copy(estado = EstadoReporte.EN_REVISION)
+                val referencia = coleccion
+                    .add(enRevision.aMapa(usarTimestampServidor = true))
+                    .await()
+                val idReporte = referencia.id
+
+                registrarHistorial(
+                    idReporte = idReporte,
+                    anterior = EstadoReporte.BORRADOR,
+                    nuevo = EstadoReporte.EN_REVISION,
+                    uidUsuario = reporte.uidUsuario,
+                    nombreUsuario = reporte.nombreUsuario,
+                    observacion = "Reporte enviado a clasificacion automatica"
+                )
+
+                // 2. clasificarImagen()
+                val resultado = clasificador.clasificarImagen(
+                    referenciaImagen = reporte.imagenUrl,
+                    tipoDeclarado = reporte.tipo
+                )
+
+                // 3. La clasificacion decide el estado final
+                val estadoFinal = if (resultado.fallo) EstadoReporte.RECHAZADO
+                else EstadoReporte.PUBLICADO
+
+                coleccion.document(idReporte).update(
+                    mapOf(
+                        Reporte.CAMPO_ESTADO to estadoFinal.valor,
+                        Reporte.CAMPO_CLASIFICACION_IA to resultado.clasificacion,
+                        Reporte.CAMPO_CONFIANZA_IA to resultado.confianza.toDouble()
+                    )
+                ).await()
+
+                registrarHistorial(
+                    idReporte = idReporte,
+                    anterior = EstadoReporte.EN_REVISION,
+                    nuevo = estadoFinal,
+                    uidUsuario = HistorialEstado.UID_SISTEMA,
+                    nombreUsuario = "Clasificador IA",
+                    observacion = observacionDeClasificacion(resultado)
+                )
+
+                // 4. Alerta y notificacion solo si quedo publicado
+                if (estadoFinal == EstadoReporte.PUBLICADO) {
+                    val publicado = enRevision.copy(
+                        id = idReporte,
+                        estado = estadoFinal,
+                        clasificacionIa = resultado.clasificacion,
+                        confianzaIa = resultado.confianza
+                    )
+                    generarAlertaSiAplica(publicado, contexto)
+                    Recurso.Exito(idReporte)
+                } else {
+                    Recurso.Error(
+                        "La imagen no pudo analizarse: ${resultado.error}. " +
+                                "El reporte quedo como rechazado, puedes editarlo y reintentar."
+                    )
+                }
+            }
         }
     } catch (e: Exception) {
         Recurso.Error(mensajeDeError(e), e)
     }
 
-    // ==========================================================
-    //  READ
-    // ==========================================================
+    /* Texto de la trazabilidad que deja la clasificacion automatica. */
+    private fun observacionDeClasificacion(resultado: ResultadoClasificacion): String = when {
+        resultado.fallo ->
+            "Clasificacion fallida: ${resultado.error}"
+
+        resultado.requiereRevisionHumana ->
+            "Clasificado como ${resultado.clasificacion} con confianza baja " +
+                    "(${resultado.confianzaPorcentaje}%). Requiere revision humana."
+
+        else ->
+            "Clasificado como ${resultado.clasificacion} " +
+                    "(${resultado.confianzaPorcentaje}% de confianza)"
+    }
 
     /**
-     * Lista los reportes ordenados del mas reciente al mas antiguo.
-     * Excluye los eliminados, que no deben verse en el listado publico.
+     * AlertasService decide internamente si el caso merece ser una alerta.
+     */
+    private suspend fun generarAlertaSiAplica(reporte: Reporte, contexto: Context?) {
+        runCatching {
+            val generada = alertasService.generarDesdeReporte(reporte)
+            val alerta = generada.datosONull()
+            if (alerta != null) {
+                alertasService.emitir(alerta, reporte, contexto)
+            }
+        }.onFailure { Log.w(TAG, "No se pudo generar la alerta", it) }
+    }
+
+    /**
+     * Lista los reportes por fecha de generación.
+     * Excluye los reportes eliminados, porque no deben verse en el listado publico.
      */
     suspend fun listar(limite: Long = Constantes.PAGINA_REPORTES): Recurso<List<Reporte>> = try {
         val consulta = coleccion
@@ -108,7 +164,7 @@ class ReportesService(
         Recurso.Error(mensajeDeError(e), e)
     }
 
-    /** Obtiene un reporte puntual (UC4: Ver detalle de reporte). */
+    /** Obtiene un reporte puntual. */
     suspend fun obtener(id: String): Recurso<Reporte> = try {
         val doc = coleccion.document(id).get().await()
         if (doc.exists()) Recurso.Exito(Reporte.desde(doc))
@@ -117,52 +173,108 @@ class ReportesService(
         Recurso.Error(mensajeDeError(e), e)
     }
 
-    // ==========================================================
-    //  UPDATE
-    // ==========================================================
-
     /**
      * actualizar() de la clase Reporte.
      * Solo modifica los campos editables; no toca el autor ni la fecha.
      */
     suspend fun actualizar(reporte: Reporte): Recurso<Unit> = try {
-        val validacion = reporte.validar()
-        if (!validacion.esValido) {
-            Recurso.Error(
-                (validacion as com.aqualer.app.data.model.ResultadoValidacion.Invalido)
-                    .primerError
-            )
+        when (val validacion = reporte.validar()) {
+            is ResultadoValidacion.Invalido -> Recurso.Error(validacion.primerError)
+
+            else -> {
+                coleccion.document(reporte.id).update(
+                    mapOf(
+                        Reporte.CAMPO_TITULO to reporte.titulo.trim(),
+                        Reporte.CAMPO_DESCRIPCION to reporte.descripcion.trim(),
+                        Reporte.CAMPO_TIPO to reporte.tipo.valor,
+                        Reporte.CAMPO_NIVEL_RIESGO to reporte.nivelRiesgo.valor,
+                        Reporte.CAMPO_ATENCION_URGENTE to reporte.atencionUrgente,
+                        Reporte.CAMPO_PUBLICAR_ANONIMO to reporte.publicarAnonimo,
+                        Reporte.CAMPO_IMAGEN_URL to reporte.imagenUrl,
+                        Reporte.CAMPO_UBICACION to reporte.ubicacion.aMapa()
+                    )
+                ).await()
+                Recurso.Exito(Unit)
+            }
+        }
+    } catch (e: Exception) {
+        Recurso.Error(mensajeDeError(e), e)
+    }
+
+    suspend fun reintentarClasificacion(
+        reporte: Reporte,
+        contexto: Context? = null
+    ): Recurso<Unit> = try {
+        if (reporte.estado != EstadoReporte.RECHAZADO) {
+            Recurso.Error("Solo los reportes rechazados pueden reintentarse")
         } else {
+            registrarHistorial(
+                idReporte = reporte.id,
+                anterior = EstadoReporte.RECHAZADO,
+                nuevo = EstadoReporte.BORRADOR,
+                uidUsuario = reporte.uidUsuario,
+                nombreUsuario = reporte.nombreUsuario,
+                observacion = "El autor corrigio el reporte y lo reenvio"
+            )
+
+            coleccion.document(reporte.id)
+                .update(Reporte.CAMPO_ESTADO, EstadoReporte.EN_REVISION.valor)
+                .await()
+
+            val resultado = clasificador.clasificarImagen(
+                referenciaImagen = reporte.imagenUrl,
+                tipoDeclarado = reporte.tipo
+            )
+
+            val estadoFinal = if (resultado.fallo) EstadoReporte.RECHAZADO
+            else EstadoReporte.PUBLICADO
+
             coleccion.document(reporte.id).update(
                 mapOf(
-                    Reporte.CAMPO_TITULO to reporte.titulo.trim(),
-                    Reporte.CAMPO_DESCRIPCION to reporte.descripcion.trim(),
-                    Reporte.CAMPO_TIPO to reporte.tipo.valor,
-                    Reporte.CAMPO_NIVEL_RIESGO to reporte.nivelRiesgo.valor,
-                    Reporte.CAMPO_ATENCION_URGENTE to reporte.atencionUrgente,
-                    Reporte.CAMPO_PUBLICAR_ANONIMO to reporte.publicarAnonimo,
-                    Reporte.CAMPO_IMAGEN_URL to reporte.imagenUrl,
-                    Reporte.CAMPO_UBICACION to reporte.ubicacion.aMapa()
+                    Reporte.CAMPO_ESTADO to estadoFinal.valor,
+                    Reporte.CAMPO_CLASIFICACION_IA to resultado.clasificacion,
+                    Reporte.CAMPO_CONFIANZA_IA to resultado.confianza.toDouble()
                 )
             ).await()
-            Recurso.Exito(Unit)
+
+            registrarHistorial(
+                idReporte = reporte.id,
+                anterior = EstadoReporte.EN_REVISION,
+                nuevo = estadoFinal,
+                uidUsuario = HistorialEstado.UID_SISTEMA,
+                nombreUsuario = "Clasificador IA",
+                observacion = observacionDeClasificacion(resultado)
+            )
+
+            if (estadoFinal == EstadoReporte.PUBLICADO) {
+                generarAlertaSiAplica(
+                    reporte.copy(
+                        estado = estadoFinal,
+                        clasificacionIa = resultado.clasificacion,
+                        confianzaIa = resultado.confianza
+                    ),
+                    contexto
+                )
+                Recurso.Exito(Unit)
+            } else {
+                Recurso.Error("La imagen sigue sin poder analizarse")
+            }
         }
     } catch (e: Exception) {
         Recurso.Error(mensajeDeError(e), e)
     }
 
     /**
-     * cambiarEstado() de la clase Reporte.
-     *
      * Valida la transicion contra la maquina de estados antes de
-     * escribir, y registra la traza en historial_estados.
+     * escribir, registra la traza y avisa al autor del cambio.
      */
     suspend fun cambiarEstado(
         reporte: Reporte,
         nuevoEstado: EstadoReporte,
         uidUsuario: String,
         nombreUsuario: String,
-        observacion: String = ""
+        observacion: String = "",
+        contexto: Context? = null
     ): Recurso<Unit> = try {
         if (!reporte.estado.puedeTransicionarA(nuevoEstado)) {
             Recurso.Error(
@@ -182,19 +294,36 @@ class ReportesService(
                 observacion = observacion
             )
 
+            // El autor se entera de que su reporte avanzo
+            if (reporte.uidUsuario != uidUsuario) {
+                runCatching {
+                    notificacionesService.notificarCambioDeEstado(
+                        reporte, nuevoEstado, contexto
+                    )
+                }
+            }
+
+            // Un reporte resuelto cierra su alerta asociada
+            if (nuevoEstado == EstadoReporte.RESUELTO) {
+                cerrarAlertaDe(reporte.id)
+            }
+
             Recurso.Exito(Unit)
         }
     } catch (e: Exception) {
         Recurso.Error(mensajeDeError(e), e)
     }
 
-    // ==========================================================
-    //  DELETE
-    // ==========================================================
-
+    /** resolverAlerta() cuando el problema del reporte ya fue atendido. */
+    private suspend fun cerrarAlertaDe(idReporte: String) {
+        runCatching {
+            val alerta = alertasService.obtenerPorReporte(idReporte).datosONull()
+            if (alerta != null && alerta.estado.estaActiva) {
+                alertasService.resolver(alerta)
+            }
+        }.onFailure { Log.w(TAG, "No se pudo cerrar la alerta", it) }
+    }
     /**
-     * eliminar() de la clase Reporte.
-     *
      * Borrado logico: el diagrama de estados define ELIMINADO como un
      * estado del reporte, no como su desaparicion. Asi se conserva el
      * historial para auditoria, que es lo que espera el Administrador.
@@ -217,6 +346,9 @@ class ReportesService(
             observacion = "Reporte eliminado por el usuario"
         )
 
+        // La alerta pierde sentido si el reporte desaparece
+        cerrarAlertaDe(reporte.id)
+
         Recurso.Exito(Unit)
     } catch (e: Exception) {
         Recurso.Error(mensajeDeError(e), e)
@@ -229,12 +361,6 @@ class ReportesService(
     } catch (e: Exception) {
         Recurso.Error(mensajeDeError(e), e)
     }
-
-    // ==========================================================
-    //  Historial de estados
-    // ==========================================================
-
-    /** Guarda la traza de una transicion en la subcoleccion. */
     private suspend fun registrarHistorial(
         idReporte: String,
         anterior: EstadoReporte,
@@ -288,5 +414,9 @@ class ReportesService(
                 "Falta un indice en Firestore. Abre el enlace que aparece en Logcat."
             else -> "Ocurrio un error al procesar el reporte."
         }
+    }
+
+    companion object {
+        private const val TAG = "AqualertReportes"
     }
 }

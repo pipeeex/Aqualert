@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_card"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Aqualert.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationContentDescription="@string/cd_volver"
+            app:navigationIcon="@drawable/ic_atras"
+            app:title="@string/rep_detalle" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/space_s"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_dodgeInsetEdges="bottom">
+
+        <LinearLayout
+            android:id="@+id/contenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- ===== Evidencia ===== -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgEvidencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:contentDescription="@string/cd_foto_reporte"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/foto_demo_1" />
+
+                <TextView
+                    android:id="@+id/txtEstado"
+                    style="@style/Widget.Aqualert.EstadoBadge"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="@dimen/space_m"
+                    android:backgroundTint="@color/estado_publicado"
+                    tools:text="Publicado" />
+
+                <TextView
+                    android:id="@+id/txtUrgente"
+                    style="@style/Widget.Aqualert.EstadoBadge"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="@dimen/space_m"
+                    android:backgroundTint="@color/state_danger"
+                    android:text="@string/rep_urgente"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <!-- ===== Datos del reporte ===== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_l">
+
+                <TextView
+                    android:id="@+id/txtTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Title"
+                    tools:text="Basura acumulada en el canal del rio Fucha" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtTipo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_chip_suave"
+                        android:paddingStart="@dimen/space_s"
+                        android:paddingTop="@dimen/space_xs"
+                        android:paddingEnd="@dimen/space_s"
+                        android:paddingBottom="@dimen/space_xs"
+                        android:textColor="@color/fluent_accent_dark"
+                        android:textSize="@dimen/text_caption"
+                        tools:text="Basuras y residuos solidos" />
+
+                    <TextView
+                        android:id="@+id/txtRiesgo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_s"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="@dimen/text_caption"
+                        tools:text="ALTO" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Body"
+                    tools:text="Se observa gran cantidad de residuos solidos flotando cerca del puente peatonal." />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/space_l"
+                    android:background="@color/surface_stroke" />
+
+                <TextView
+                    android:id="@+id/txtUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:drawablePadding="@dimen/space_s"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Body"
+                    app:drawableStartCompat="@drawable/ic_ubicacion"
+                    tools:text="Bogota, sector simulado" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtAutor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="@dimen/space_s"
+                        android:gravity="center_vertical"
+                        android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                        app:drawableStartCompat="@drawable/ic_perfil"
+                        tools:text="Felipe Villaquiran" />
+
+                    <TextView
+                        android:id="@+id/txtFecha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                        tools:text="09 oct 2026, 14:32" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditar"
+                    style="@style/Widget.Aqualert.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_l"
+                    android:text="@string/det_editar"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_editar"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReintentar"
+                    style="@style/Widget.Aqualert.Button.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/det_reintentar"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- ===== Analisis automatico (ClasificadorIA) ===== -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAnalisis"
+                style="@style/Widget.Aqualert.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginTop="@dimen/space_m"
+                android:layout_marginEnd="@dimen/space_l"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_l">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/space_s"
+                        android:gravity="center_vertical"
+                        android:text="@string/det_analisis"
+                        android:textAppearance="@style/TextAppearance.Aqualert.Subtitle"
+                        app:drawableStartCompat="@drawable/ic_ia" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_m"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtClasificacion"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Body"
+                            tools:text="basuras" />
+
+                        <TextView
+                            android:id="@+id/txtConfianza"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/neutral_grey130"
+                            android:textSize="@dimen/text_body"
+                            tools:text="Confianza: 87%" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/barraConfianza"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:layout_marginTop="@dimen/space_s"
+                        android:max="100"
+                        android:progressTint="@color/state_success"
+                        tools:progress="87" />
+
+                    <TextView
+                        android:id="@+id/txtRevisionHumana"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_s"
+                        android:background="@drawable/bg_chip_suave"
+                        android:padding="@dimen/space_s"
+                        android:text="@string/det_revision_humana"
+                        android:textColor="@color/estado_en_atencion"
+                        android:textSize="@dimen/text_caption"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== Historial de estados ===== -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardHistorial"
+                style="@style/Widget.Aqualert.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginTop="@dimen/space_m"
+                android:layout_marginEnd="@dimen/space_l"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/space_l"
+                    android:paddingBottom="@dimen/space_s">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginBottom="@dimen/space_s"
+                        android:text="@string/det_historial"
+                        android:textAppearance="@style/TextAppearance.Aqualert.Subtitle" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listaHistorial"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/item_historial" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== Comentarios ===== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_m"
+                android:background="@color/surface_card"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/space_l"
+                android:paddingBottom="@dimen/space_m">
+
+                <TextView
+                    android:id="@+id/txtContadorComentarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:text="@string/com_titulo"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Subtitle"
+                    tools:text="Comentarios (3)" />
+
+                <TextView
+                    android:id="@+id/txtSinComentarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_l"
+                    android:layout_marginBottom="@dimen/space_l"
+                    android:gravity="center"
+                    android:text="@string/com_sin_comentarios"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Body"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listaComentarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_comentario" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progreso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- ===== Barra inferior para escribir el comentario (UC8) ===== -->
+    <LinearLayout
+        android:id="@+id/zonaComentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/surface_card"
+        android:elevation="8dp"
+        app:layout_insetEdge="bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_l"
+        android:paddingTop="@dimen/space_s"
+        android:paddingEnd="@dimen/space_s"
+        android:paddingBottom="@dimen/space_s"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Aqualert.TextInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/com_escribir">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etComentario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEnviarComentario"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/space_s"
+            android:contentDescription="@string/com_publicar"
+            app:icon="@drawable/ic_enviar"
+            app:iconSize="20dp" />
+    </LinearLayout>
+
+    <!-- Aviso para el Visitante: debe registrarse para comentar -->
+    <TextView
+        android:id="@+id/txtAvisoSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_insetEdge="bottom"
+        android:background="@color/neutral_grey04"
+        android:gravity="center"
+        android:padding="@dimen/space_m"
+        android:text="@string/det_debes_iniciar"
+        android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
