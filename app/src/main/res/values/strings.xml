@@ -198,4 +198,17 @@
     <!--CHATBOT-->
     <string name="ini_acceso_chatbot">Asistente</string>
     <string name="ini_acceso_chatbot_desc">Resuelve tus dudas sobre reportes y el agua</string>
+
+    <!-- ===== Panel de administracion ===== -->
+    <string name="admin_subtitulo">Gestiona los reportes de la plataforma</string>
+    <string name="admin_filtro_todos">Todos</string>
+    <string name="admin_contador">%1$d reportes</string>
+    <string name="admin_gestionar">Gestionar reporte</string>
+    <string name="admin_nuevo_estado">Nuevo estado</string>
+    <string name="admin_observacion_hint">Observacion (opcional)</string>
+    <string name="admin_sin_transiciones">Este reporte esta en un estado final y no admite mas cambios</string>
+    <string name="admin_estado_cambiado">Estado actualizado correctamente</string>
+    <string name="admin_aplicar">Aplicar cambio</string>
+    <string name="ini_acceso_admin">Panel de administracion</string>
+    <string name="ini_acceso_admin_desc">Verifica reportes y modera contenido</string>
 </resources>

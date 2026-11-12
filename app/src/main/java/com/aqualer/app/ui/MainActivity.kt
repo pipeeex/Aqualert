@@ -14,6 +14,7 @@ import com.aqualer.app.ui.reportes.FormularioReporteActivity
 import com.aqualer.app.ui.reportes.ReportesActivity
 import com.aqualer.app.ui.consejos.ConsejosActivity
 import com.aqualer.app.ui.chatbot.ChatbotActivity
+import com.aqualer.app.ui.admin.AdminActivity
 /**
  * Pantalla de inicio de Aqualert.
  *
@@ -67,6 +68,11 @@ class MainActivity : AppCompatActivity() {
         // Consultar consejos
         binding.accesoConsejos.setOnClickListener {
             startActivity(Intent(this, ConsejosActivity::class.java))
+        }
+
+        // Panel exclusivo del Administrador
+        binding.accesoAdmin.setOnClickListener {
+            startActivity(Intent(this, AdminActivity::class.java))
         }
 
         // UC10: Usar chatbot
@@ -134,6 +140,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCerrarSesion.visibility =
             if (autenticado) View.VISIBLE else View.GONE
+
+        binding.accesoAdmin.visibility =
+            if (usuario.rol.puedeModerar) View.VISIBLE else View.GONE
     }
 
     /** Nombre legible del rol para mostrarlo en la interfaz. */

@@ -448,6 +448,69 @@
                         app:tint="@color/neutral_grey30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Panel del Administrador: solo visible para ese rol -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/accesoAdmin"
+                style="@style/Widget.Aqualert.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginTop="@dimen/space_s"
+                android:layout_marginEnd="@dimen/space_l"
+                android:layout_marginBottom="@dimen/space_xl"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_l">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icono_acceso"
+                        android:contentDescription="@string/admin_titulo"
+                        android:padding="@dimen/space_s"
+                        android:src="@drawable/ic_admin"
+                        app:tint="@color/state_danger" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_m"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_admin"
+                            android:textColor="@color/neutral_grey130"
+                            android:textSize="@dimen/text_body_large"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_admin_desc"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_flecha_derecha"
+                        app:tint="@color/neutral_grey30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
 

@@ -104,6 +104,14 @@
             android:name=".ui.chatbot.ChatbotActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Panel del Administrador -->
+        <activity
+            android:name=".ui.admin.AdminActivity"
+            android:exported="false" />
+
     </application>
+
+
 
 </manifest>
