@@ -3,7 +3,6 @@ package com.aqualer.app.util
 /**
  * Constantes globales del sistema Aqualert.
  * Centraliza nombres de colecciones y parametros de negocio para cumplir
- * el RNF008 (mantenibilidad del codigo).
  */
 object Constantes {
 

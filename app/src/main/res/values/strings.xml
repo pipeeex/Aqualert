@@ -168,4 +168,27 @@
     <string name="det_revision_humana">Requiere revision humana</string>
     <string name="det_reintentar">Reenviar a clasificacion</string>
     <string name="det_debes_iniciar">Inicia sesion para comentar este reporte</string>
+
+    <!-- ===== Pantalla de inicio ===== -->
+    <string name="ini_saludo">Hola, %1$s</string>
+    <string name="ini_sesion_invitado">Explorando sin iniciar sesion</string>
+    <string name="ini_que_hacer">Que quieres hacer</string>
+    <string name="ini_confirmar_salir">Se cerrara tu sesion en este dispositivo</string>
+    <string name="ini_aviso_visitante">Inicia sesion para reportar contaminacion y participar en los comentarios de la comunidad.</string>
+
+    <string name="ini_acceso_reportes">Ver reportes</string>
+    <string name="ini_acceso_reportes_desc">Consulta lo que ha reportado la comunidad</string>
+    <string name="ini_acceso_crear">Crear un reporte</string>
+    <string name="ini_acceso_crear_desc">Documenta un caso de contaminacion</string>
+
+    <!-- Nombres de los roles para mostrar al usuario -->
+    <string name="rol_visitante">Visitante</string>
+    <string name="rol_ciudadano">Ciudadano</string>
+    <string name="rol_administrador">Administrador</string>
+
+    <plurals name="ini_reportes_aportados">
+        <item quantity="one">reporte aportado a la comunidad</item>
+        <item quantity="other">reportes aportados a la comunidad</item>
+    </plurals>
+
 </resources>

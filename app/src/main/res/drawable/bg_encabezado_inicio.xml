@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Encabezado de la pantalla de inicio: degradado del acento Fluent -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="135"
+        android:startColor="@color/fluent_accent"
+        android:endColor="@color/fluent_accent_darker"
+        android:type="linear" />
+</shape>

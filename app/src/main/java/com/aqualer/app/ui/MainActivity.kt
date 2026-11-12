@@ -2,105 +2,139 @@ package com.aqualer.app.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.aqualer.app.R
-import com.aqualer.app.data.estado.RolUsuario
+import com.aqualer.app.data.model.Usuario
 import com.aqualer.app.databinding.ActivityMainBinding
-import com.aqualer.app.ui.auth.AuthViewModel
 import com.aqualer.app.ui.auth.LoginActivity
-import com.aqualer.app.util.Recurso
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.aqualer.app.ui.reportes.FormularioReporteActivity
 import com.aqualer.app.ui.reportes.ReportesActivity
 
 /**
- * Pantalla principal provisional.
+ * Pantalla de inicio de Aqualert.
  *
- * En esta etapa solo verifica que la autenticacion y el guardado del
- * perfil funcionen: muestra los datos que quedaron en la coleccion
- * "usuarios" y permite cerrar sesion.
+ * Presenta a la persona su perfil y los accesos principales segun el
+ * rol con el que entro:
  *
- * Mas adelante se convierte en el contenedor con la barra de navegacion
- * (Reportes, Mapa, Reportar, Consejos, Perfil).
+ *   Visitante  -> consultar reportes y consejos (UC3, UC4, UC9)
+ *   Ciudadano  -> ademas crear reportes y comentar (UC5, UC8)
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel: InicioViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnCerrarSesion.setOnClickListener {
-            viewModel.cerrarSesion { irAlLogin() }
-        }
-        binding.btnVerReportes.setOnClickListener {
+        configurarAcciones()
+        observarViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresca el contador al volver de crear o eliminar un reporte
+        viewModel.cargar()
+    }
+
+    // ==========================================================
+    //  Acciones
+    // ==========================================================
+
+    private fun configurarAcciones() {
+
+        binding.btnCerrarSesion.setOnClickListener { confirmarCierreDeSesion() }
+
+        // UC3: Consultar reportes
+        binding.accesoReportes.setOnClickListener {
             startActivity(Intent(this, ReportesActivity::class.java))
         }
 
-        observarUsuario()
-        viewModel.cargarUsuarioActual()
+        // UC5: Crear reporte de contaminacion
+        binding.accesoCrear.setOnClickListener {
+            startActivity(Intent(this, FormularioReporteActivity::class.java))
+        }
+
+        // El visitante llega al login desde el aviso
+        binding.btnIniciarSesion.setOnClickListener { irAlLogin() }
     }
 
-    private fun observarUsuario() {
-        viewModel.estadoAuth.observe(this) { estado ->
-            when (estado) {
-                is Recurso.Cargando -> {
-                    binding.txtEstadoCarga.text = getString(R.string.msg_cargando)
-                }
-
-                is Recurso.Exito -> {
-                    val usuario = estado.datos
-                    val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-
-                    binding.txtEstadoCarga.text = ""
-                    binding.txtIniciales.text = usuario.iniciales
-                    binding.txtNombre.text = usuario.nombre
-                    binding.txtEmail.text =
-                        usuario.email.ifBlank { "Sin correo (modo visitante)" }
-
-                    binding.txtDatos.text = buildString {
-                        appendLine("UID:            ${usuario.id.ifBlank { "-" }}")
-                        appendLine("Rol:            ${usuario.rol.valor}")
-                        appendLine("Estado:         ${usuario.estado.valor}")
-                        appendLine("Activo:         ${usuario.activo}")
-                        appendLine("Fecha registro: ${formato.format(usuario.fechaRegistro)}")
-                        appendLine()
-                        appendLine("Permisos segun el rol:")
-                        appendLine("  Crear reportes:  ${usuario.rol.puedeCrearReportes}")
-                        appendLine("  Comentar:        ${usuario.rol.puedeComentar}")
-                        appendLine("  Usar chatbot:    ${usuario.rol.puedeUsarChatbot}")
-                        append("  Moderar:         ${usuario.rol.puedeModerar}")
-                    }
-
-                    // El visitante no tiene sesion que cerrar
-                    val esVisitante = usuario.rol == RolUsuario.VISITANTE
-                    binding.btnCerrarSesion.text =
-                        if (esVisitante) getString(R.string.auth_iniciar_sesion)
-                        else getString(R.string.auth_cerrar_sesion)
-
-                    binding.txtIniciales.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            if (esVisitante) R.color.neutral_grey60 else R.color.fluent_accent
-                        )
-                    )
-
-                    if (esVisitante) {
-                        binding.btnCerrarSesion.setOnClickListener { irAlLogin() }
-                    }
-                }
-
-                is Recurso.Error -> {
-                    binding.txtEstadoCarga.text = estado.mensaje
-                }
+    private fun confirmarCierreDeSesion() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.auth_cerrar_sesion)
+            .setMessage(R.string.ini_confirmar_salir)
+            .setPositiveButton(R.string.auth_cerrar_sesion) { _, _ ->
+                viewModel.cerrarSesion { irAlLogin() }
             }
+            .setNegativeButton(R.string.msg_cancelar, null)
+            .show()
+    }
+
+    // ==========================================================
+    //  Observadores
+    // ==========================================================
+
+    private fun observarViewModel() {
+
+        viewModel.usuario.observe(this) { usuario ->
+            pintarPerfil(usuario)
+        }
+
+        viewModel.totalReportes.observe(this) { total ->
+            binding.txtTotalReportes.text = total.toString()
+            binding.txtEtiquetaReportes.text = resources.getQuantityString(
+                R.plurals.ini_reportes_aportados, total
+            )
         }
     }
+
+    // ==========================================================
+    //  Pintado
+    // ==========================================================
+
+    private fun pintarPerfil(usuario: Usuario) {
+        val autenticado = usuario.rol.estaAutenticado
+
+        binding.txtIniciales.text = usuario.iniciales
+        binding.txtSaludo.text = getString(
+            R.string.ini_saludo,
+            primerNombre(usuario.nombre)
+        )
+
+        binding.txtDetalle.text = if (autenticado) usuario.email
+        else getString(R.string.ini_sesion_invitado)
+
+        binding.txtRol.text = getString(etiquetaDelRol(usuario))
+
+        // El aporte propio solo tiene sentido con una cuenta
+        binding.cardAporte.visibility = if (autenticado) View.VISIBLE else View.GONE
+
+        // El visitante ve el aviso en lugar del acceso a crear reporte
+        binding.accesoCrear.visibility =
+            if (usuario.rol.puedeCrearReportes) View.VISIBLE else View.GONE
+        binding.cardAvisoVisitante.visibility =
+            if (autenticado) View.GONE else View.VISIBLE
+
+        binding.btnCerrarSesion.visibility =
+            if (autenticado) View.VISIBLE else View.GONE
+    }
+
+    /** Nombre legible del rol para mostrarlo en la interfaz. */
+    private fun etiquetaDelRol(usuario: Usuario): Int = when {
+        usuario.rol.puedeModerar -> R.string.rol_administrador
+        usuario.rol.estaAutenticado -> R.string.rol_ciudadano
+        else -> R.string.rol_visitante
+    }
+
+    /** Solo el primer nombre: el saludo se siente mas cercano. */
+    private fun primerNombre(nombre: String): String =
+        nombre.trim().split(" ").firstOrNull()?.takeIf { it.isNotBlank() }
+            ?: getString(R.string.rol_visitante)
 
     private fun irAlLogin() {
         val intent = Intent(this, LoginActivity::class.java)
