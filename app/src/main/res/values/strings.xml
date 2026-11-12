@@ -191,4 +191,11 @@
         <item quantity="other">reportes aportados a la comunidad</item>
     </plurals>
 
+    <!--Consejos-->
+    <string name="ini_acceso_consejos">Cuidado del agua</string>
+    <string name="ini_acceso_consejos_desc">Consejos para preservar los canales</string>
+
+    <!--CHATBOT-->
+    <string name="ini_acceso_chatbot">Asistente</string>
+    <string name="ini_acceso_chatbot_desc">Resuelve tus dudas sobre reportes y el agua</string>
 </resources>

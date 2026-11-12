@@ -94,6 +94,16 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- Seccion de consejos -->
+        <activity
+            android:name=".ui.consejos.ConsejosActivity"
+            android:exported="false" />
+
+        <!-- Asistente conversacional (UC10) -->
+        <activity
+            android:name=".ui.chatbot.ChatbotActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

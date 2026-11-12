@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Estructura vertical simple: barra, conversacion y escritura.
+  Se evita el CoordinatorLayout porque el comportamiento del AppBar
+  y el ajuste del borde inferior competian por reposicionar la lista,
+  lo que hacia que los mensajes pasaran por encima de la barra.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_background"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/Widget.Aqualert.Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/cd_volver"
+        app:navigationIcon="@drawable/ic_atras"
+        app:title="@string/chat_titulo" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/surface_stroke" />
+
+    <!-- Conversacion: ocupa todo el espacio libre entre barra y escritura -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaMensajes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/space_m"
+        android:paddingBottom="@dimen/space_s"
+        tools:listitem="@layout/item_mensaje_bot" />
+
+    <!-- Zona inferior: sugerencias y campo de escritura -->
+    <LinearLayout
+        android:id="@+id/zonaEscritura"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_card"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_s">
+
+        <TextView
+            android:id="@+id/txtEscribiendo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_l"
+            android:layout_marginTop="@dimen/space_xs"
+            android:text="@string/chat_escribiendo"
+            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Preguntas frecuentes -->
+        <HorizontalScrollView
+            android:id="@+id/zonaSugerencias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/space_l"
+            android:paddingTop="@dimen/space_s"
+            android:paddingEnd="@dimen/space_l"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/grupoSugerencias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_l"
+            android:paddingTop="@dimen/space_s"
+            android:paddingEnd="@dimen/space_s">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Aqualert.TextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/chat_escribir">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPregunta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnviar"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/space_s"
+                android:contentDescription="@string/chat_enviar"
+                app:icon="@drawable/ic_enviar"
+                app:iconSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

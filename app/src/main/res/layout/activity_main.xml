@@ -277,7 +277,6 @@
                 android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_s"
                 android:layout_marginEnd="@dimen/space_l"
-                android:layout_marginBottom="@dimen/space_xl"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground">
@@ -329,7 +328,129 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- UC9: Consultar consejos -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/accesoConsejos"
+                style="@style/Widget.Aqualert.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginTop="@dimen/space_s"
+                android:layout_marginEnd="@dimen/space_l"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_l">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icono_acceso"
+                        android:contentDescription="@string/nav_consejos"
+                        android:padding="@dimen/space_s"
+                        android:src="@drawable/ic_consejos"
+                        app:tint="@color/estado_en_atencion" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_m"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_consejos"
+                            android:textColor="@color/neutral_grey130"
+                            android:textSize="@dimen/text_body_large"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_consejos_desc"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_flecha_derecha"
+                        app:tint="@color/neutral_grey30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- UC10: Usar chatbot -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/accesoChatbot"
+                style="@style/Widget.Aqualert.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginTop="@dimen/space_s"
+                android:layout_marginEnd="@dimen/space_l"
+                android:layout_marginBottom="@dimen/space_xl"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_l">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icono_acceso"
+                        android:contentDescription="@string/nav_chatbot"
+                        android:padding="@dimen/space_s"
+                        android:src="@drawable/ic_chat"
+                        app:tint="@color/estado_en_revision" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_m"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_chatbot"
+                            android:textColor="@color/neutral_grey130"
+                            android:textSize="@dimen/text_body_large"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ini_acceso_chatbot_desc"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_flecha_derecha"
+                        app:tint="@color/neutral_grey30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
+
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

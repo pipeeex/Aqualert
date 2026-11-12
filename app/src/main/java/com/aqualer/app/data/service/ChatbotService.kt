@@ -175,8 +175,14 @@ class ChatbotService(
      * temas disponibles en lugar de inventar una respuesta.
      */
     fun procesarPregunta(pregunta: String): String {
-        val normalizada = normalizar(pregunta)
+        val normalizada = normalizar(pregunta.trim())
 
+        // 1. Coincidencia exacta (chips de preguntas frecuentes)
+        BASE_CONOCIMIENTO
+            .firstOrNull { normalizar(it.pregunta) == normalizada }
+            ?.let { return it.respuesta }
+
+        // 2. Coincidencia por palabras clave (texto libre)
         val mejor = BASE_CONOCIMIENTO
             .map { entrada -> entrada to puntuar(entrada, normalizada) }
             .filter { (_, puntaje) -> puntaje > 0 }
@@ -266,7 +272,8 @@ class ChatbotService(
             EntradaConocimiento(
                 pregunta = "Como creo un reporte?",
                 palabrasClave = listOf(
-                    "crear reporte", "como reporto", "hacer un reporte",
+                    "crear reporte", "crear un reporte", "creo un reporte",
+                    "como creo", "como reporto", "hacer un reporte",
                     "nuevo reporte", "reportar", "denunciar", "subir reporte"
                 ),
                 respuesta = "Para crear un reporte entra a la seccion Reportes y pulsa el " +

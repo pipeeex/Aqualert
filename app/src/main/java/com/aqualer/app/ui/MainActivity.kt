@@ -12,7 +12,8 @@ import com.aqualer.app.databinding.ActivityMainBinding
 import com.aqualer.app.ui.auth.LoginActivity
 import com.aqualer.app.ui.reportes.FormularioReporteActivity
 import com.aqualer.app.ui.reportes.ReportesActivity
-
+import com.aqualer.app.ui.consejos.ConsejosActivity
+import com.aqualer.app.ui.chatbot.ChatbotActivity
 /**
  * Pantalla de inicio de Aqualert.
  *
@@ -62,6 +63,17 @@ class MainActivity : AppCompatActivity() {
 
         // El visitante llega al login desde el aviso
         binding.btnIniciarSesion.setOnClickListener { irAlLogin() }
+
+        // Consultar consejos
+        binding.accesoConsejos.setOnClickListener {
+            startActivity(Intent(this, ConsejosActivity::class.java))
+        }
+
+        // UC10: Usar chatbot
+        binding.accesoChatbot.setOnClickListener {
+            startActivity(Intent(this, ChatbotActivity::class.java))
+        }
+
     }
 
     private fun confirmarCierreDeSesion() {

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Aqualert.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_l"
+    android:layout_marginTop="@dimen/space_s"
+    android:layout_marginEnd="@dimen/space_l"
+    android:layout_marginBottom="@dimen/space_s"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/space_l">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgCategoria"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_icono_acceso"
+                android:contentDescription="@null"
+                android:padding="@dimen/space_s"
+                app:tint="@color/fluent_teal"
+                tools:src="@drawable/ic_consejos" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/neutral_grey130"
+                    android:textSize="@dimen/text_body_large"
+                    tools:text="No arrojes residuos a los canales" />
+
+                <TextView
+                    android:id="@+id/txtCategoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                    tools:text="Prevencion" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgIndicador"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@null"
+                android:rotation="0"
+                android:src="@drawable/ic_flecha_abajo"
+                app:tint="@color/neutral_grey30" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtContenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:lineSpacingMultiplier="1.3"
+            android:textAppearance="@style/TextAppearance.Aqualert.Body"
+            android:visibility="gone"
+            tools:text="Las basuras que llegan a un canal obstruyen el flujo del agua y favorecen inundaciones en epoca de lluvias."
+            tools:visibility="visible" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
