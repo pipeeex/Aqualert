@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             style="@style/Widget.Aqualert.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:navigationContentDescription="@string/cd_volver"
             app:navigationIcon="@drawable/ic_atras"
             app:title="@string/rep_titulo_listado" />

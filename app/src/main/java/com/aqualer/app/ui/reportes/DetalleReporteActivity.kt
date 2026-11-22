@@ -20,6 +20,7 @@ import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Reune en una sola pantalla la evidencia, los datos del reporte, el
@@ -43,6 +44,7 @@ class DetalleReporteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalleReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID).orEmpty()
         if (idReporte.isBlank()) {

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aqualer.app.databinding.ActivityChatbotBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Asistente conversacional de Aqualert (UC10 "Usar chatbot").
@@ -32,6 +33,7 @@ class ChatbotActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         configurarLista()
         configurarAcciones()

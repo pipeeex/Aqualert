@@ -13,6 +13,7 @@ import com.aqualer.app.databinding.ActivityReportesBinding
 import com.aqualer.app.util.Constantes
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Listado de reportes de contaminacion (RF0002).
@@ -37,6 +38,7 @@ class ReportesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityReportesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         configurarLista()
         configurarAcciones()

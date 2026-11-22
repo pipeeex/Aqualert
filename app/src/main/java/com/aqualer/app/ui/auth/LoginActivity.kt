@@ -13,6 +13,7 @@ import com.aqualer.app.ui.MainActivity
 import com.aqualer.app.util.Constantes
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Pantalla de inicio de sesion (RF0001).
@@ -32,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.root.aplicarInsetSuperior()
 
         configurarAcciones()
         observarViewModel()

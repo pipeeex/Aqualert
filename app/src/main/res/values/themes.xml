@@ -150,6 +150,7 @@
 
     <style name="Widget.Aqualert.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="android:background">@color/surface_card</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="titleTextColor">@color/neutral_grey130</item>
         <item name="titleTextAppearance">@style/TextAppearance.Aqualert.Subtitle</item>
         <item name="navigationIconTint">@color/neutral_grey90</item>

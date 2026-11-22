@@ -16,6 +16,7 @@ import com.aqualer.app.ui.reportes.ReportesAdapter
 import com.aqualer.app.util.Recurso
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Panel de administracion de reportes.
@@ -41,6 +42,7 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         configurarLista()
         binding.toolbar.setNavigationOnClickListener { finish() }

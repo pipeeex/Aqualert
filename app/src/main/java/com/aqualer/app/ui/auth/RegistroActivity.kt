@@ -10,6 +10,7 @@ import com.aqualer.app.databinding.ActivityRegistroBinding
 import com.aqualer.app.ui.MainActivity
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Pantalla de registro de usuarios (RF0001).
@@ -30,6 +31,7 @@ class RegistroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistroBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         configurarAcciones()
         observarViewModel()

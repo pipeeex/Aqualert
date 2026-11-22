@@ -10,6 +10,7 @@ import com.aqualer.app.databinding.ActivityConsejosBinding
 import com.aqualer.app.util.Recurso
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Seccion informativa sobre el cuidado del agua (RF0005).
@@ -29,6 +30,7 @@ class ConsejosActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityConsejosBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         configurarLista()
         binding.toolbar.setNavigationOnClickListener { finish() }

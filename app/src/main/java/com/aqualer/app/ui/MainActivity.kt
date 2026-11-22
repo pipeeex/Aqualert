@@ -15,6 +15,8 @@ import com.aqualer.app.ui.reportes.ReportesActivity
 import com.aqualer.app.ui.consejos.ConsejosActivity
 import com.aqualer.app.ui.chatbot.ChatbotActivity
 import com.aqualer.app.ui.admin.AdminActivity
+import com.aqualer.app.util.aplicarInsetSuperior
+
 /**
  * Pantalla de inicio de Aqualert.
  *
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.encabezado.aplicarInsetSuperior()
 
         configurarAcciones()
         observarViewModel()

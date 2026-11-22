@@ -17,6 +17,7 @@ import com.aqualer.app.util.FotosDemo
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
 import kotlin.random.Random
+import com.aqualer.app.util.aplicarInsetSuperior
 
 /**
  * Formulario de creacion y edicion de reportes (RF0003).
@@ -56,6 +57,7 @@ class FormularioReporteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFormularioReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID)
 
