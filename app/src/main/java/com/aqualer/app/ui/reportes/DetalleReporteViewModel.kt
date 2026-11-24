@@ -15,6 +15,8 @@ import com.aqualer.app.data.service.ReportesService
 import com.aqualer.app.util.Recurso
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
+import android.util.Log
+
 
 /**
  * ViewModel del detalle de un reporte.
@@ -59,9 +61,22 @@ class DetalleReporteViewModel(
     /** UC4: Ver detalle de reporte. */
     fun cargar(idReporte: String) {
         _reporte.value = Recurso.Cargando
+
         viewModelScope.launch {
-            _reporte.value = reportesService.obtener(idReporte)
+            Log.d(TAG, "Pidiendo el reporte $idReporte")
+
+            _reporte.value = try {
+                reportesService.obtener(idReporte).also {
+                    Log.d(TAG, "Respuesta recibida: $it")
+                }
+            } catch (e: Exception) {
+                // Sin este catch una excepcion deja la pantalla
+                // cargando para siempre, sin mensaje ni cierre
+                Log.e(TAG, "Fallo al cargar el reporte", e)
+                Recurso.Error(e.message ?: "No se pudo cargar el reporte")
+            }
         }
+
         cargarHistorial(idReporte)
         escucharComentarios(idReporte)
     }
@@ -184,5 +199,9 @@ class DetalleReporteViewModel(
         // Evita dejar abierta la conexion de tiempo real
         escuchaComentarios?.remove()
         escuchaComentarios = null
+    }
+
+    private companion object {
+        const val TAG = "DetalleVM"
     }
 }

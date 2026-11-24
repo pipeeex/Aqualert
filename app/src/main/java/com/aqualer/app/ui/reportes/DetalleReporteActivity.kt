@@ -47,8 +47,6 @@ class DetalleReporteActivity : AppCompatActivity() {
         binding = ActivityDetalleReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbar.aplicarInsetSuperior()
-        binding.toolbar.aplicarInsetSuperior()
-        binding.zonaInsignias.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID).orEmpty()
         if (idReporte.isBlank()) {
@@ -119,6 +117,24 @@ class DetalleReporteActivity : AppCompatActivity() {
 
     private fun observarViewModel() {
 
+        // Carga del reporte (UC4: Ver detalle de reporte)
+        viewModel.reporte.observe(this) { estado ->
+            when (estado) {
+                is Recurso.Cargando -> binding.progreso.visibility = View.VISIBLE
+
+                is Recurso.Exito -> {
+                    binding.progreso.visibility = View.GONE
+                    binding.contenido.visibility = View.VISIBLE
+                    pintarReporte(estado.datos)
+                }
+
+                is Recurso.Error -> {
+                    binding.progreso.visibility = View.GONE
+                    mostrarMensaje(estado.mensaje)
+                }
+            }
+        }
+
         viewModel.usuario.observe(this) {
             val puedeComentar = viewModel.puedeComentar()
 
@@ -168,18 +184,6 @@ class DetalleReporteActivity : AppCompatActivity() {
             }
         }
 
-        // El usuario llega despues de la primera pintada: ajusta los permisos
-        viewModel.usuario.observe(this) {
-            binding.zonaComentario.visibility =
-                if (viewModel.puedeComentar()) View.VISIBLE else View.GONE
-            binding.txtAvisoSesion.visibility =
-                if (viewModel.puedeComentar()) View.GONE else View.VISIBLE
-
-            reporteActual?.let { reporte ->
-                binding.btnEditar.visibility =
-                    if (viewModel.puedeEditar(reporte)) View.VISIBLE else View.GONE
-            }
-        }
     }
 
     // ==========================================================
@@ -190,7 +194,9 @@ class DetalleReporteActivity : AppCompatActivity() {
         reporteActual = reporte
 
         // --- Evidencia ---
-        binding.imgEvidencia.cargarEvidencia(reporte.imagenUrl, ANCHO_DETALLE)        // --- Estado ---
+        binding.imgEvidencia.cargarEvidencia(reporte.imagenUrl, ANCHO_DETALLE)
+
+        // --- Estado ---
         binding.txtEstado.text = getString(reporte.estado.etiqueta)
         binding.txtEstado.backgroundTintList =
             ContextCompat.getColorStateList(this, reporte.estado.color)
