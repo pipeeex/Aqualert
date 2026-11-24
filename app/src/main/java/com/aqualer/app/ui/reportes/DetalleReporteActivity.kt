@@ -47,6 +47,7 @@ class DetalleReporteActivity : AppCompatActivity() {
         binding = ActivityDetalleReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbar.aplicarInsetSuperior()
+        binding.zonaInsignias.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID).orEmpty()
         if (idReporte.isBlank()) {
