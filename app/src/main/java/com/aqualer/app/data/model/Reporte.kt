@@ -67,6 +67,11 @@ data class Reporte(
     /** Nivel de confianza de la clasificacion (0.0 a 1.0). */
     val confianzaIa: Float = 0f,
 
+    val etiquetasIa: Map<String, Float> = emptyMap(),
+
+    /** Version del modelo que produjo la clasificacion (trazabilidad). */
+    val versionModeloIa: String = "",
+
     /** Contador de comentarios, para mostrarlo en el listado sin consultar. */
     val totalComentarios: Int = 0
 ) : Parcelable {
@@ -92,6 +97,9 @@ data class Reporte(
     val clasificacionConfiable: Boolean
         get() = confianzaIa >= Constantes.UMBRAL_CONFIANZA_IA
 
+    val hayDiscrepanciaIa: Boolean
+        get() = clasificacionIa.isNotBlank() &&
+                !clasificacionIa.equals(tipo.valor, ignoreCase = true)
     /**
      * Valida los campos obligatorios antes de enviar el reporte (RNF007).
      * El diagrama de estados exige foto + descripcion para salir de BORRADOR.
@@ -148,6 +156,8 @@ data class Reporte(
         CAMPO_ESTADO to estado.valor,
         CAMPO_CLASIFICACION_IA to clasificacionIa,
         CAMPO_CONFIANZA_IA to confianzaIa.toDouble(),
+        CAMPO_ETIQUETAS_IA to etiquetasIa.mapValues { it.value.toDouble() },
+        CAMPO_VERSION_MODELO_IA to versionModeloIa,
         CAMPO_TOTAL_COMENTARIOS to totalComentarios,
         CAMPO_FECHA to if (usarTimestampServidor) FieldValue.serverTimestamp()
         else Timestamp(fechaCreacion)
@@ -170,6 +180,8 @@ data class Reporte(
         const val CAMPO_CLASIFICACION_IA = "clasificacion_ia"
         const val CAMPO_CONFIANZA_IA = "confianza_ia"
         const val CAMPO_TOTAL_COMENTARIOS = "total_comentarios"
+        const val CAMPO_ETIQUETAS_IA = "etiquetas_ia"
+        const val CAMPO_VERSION_MODELO_IA = "version_modelo_ia"
 
         /** Reconstruye el reporte desde un documento de Firestore. */
         @Suppress("UNCHECKED_CAST")
@@ -189,6 +201,10 @@ data class Reporte(
             fechaCreacion = doc.getTimestamp(CAMPO_FECHA)?.toDate() ?: Date(),
             clasificacionIa = doc.getString(CAMPO_CLASIFICACION_IA).orEmpty(),
             confianzaIa = (doc.getDouble(CAMPO_CONFIANZA_IA) ?: 0.0).toFloat(),
+            etiquetasIa = (doc.get(CAMPO_ETIQUETAS_IA) as? Map<String, Any?>)
+                ?.mapValues { (_, valor) -> (valor as? Number)?.toFloat() ?: 0f }
+                ?: emptyMap(),
+            versionModeloIa = doc.getString(CAMPO_VERSION_MODELO_IA).orEmpty(),
             totalComentarios = (doc.getLong(CAMPO_TOTAL_COMENTARIOS) ?: 0L).toInt()
         )
     }

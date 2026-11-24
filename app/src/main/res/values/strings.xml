@@ -136,6 +136,7 @@
     <string name="admin_observacion">Registrar observacion</string>
     <string name="admin_bloquear_usuario">Bloquear usuario</string>
     <string name="admin_habilitar_usuario">Habilitar usuario</string>
+    <string name="det_admin_no_comenta">Los administradores no pueden comentar</string>
 
     <!-- ===== Alertas y notificaciones ===== -->
     <string name="alerta_titulo">Alertas</string>
@@ -223,10 +224,15 @@
     <string name="rep_analizando">Analizando la imagen…</string>
 
     <!-- ===== UBICACION mpas    ===== -->
-
     <string name="rep_obteniendo_ubicacion">Obteniendo tu ubicacion…</string>
     <string name="rep_ubicacion_sin_permiso">Concede el permiso de ubicacion</string>
     <string name="rep_ubicacion_actual">Usar mi ubicacion</string>
     <string name="rep_marcar_mapa">Marcar en el mapa</string>
+
+    <!-- ===== Clasificaicon IA     ===== -->
+    <string name="rep_otras_etiquetas">Otras clases consideradas por el modelo</string>
+    <string name="rep_etiqueta_chip">%1$s · %2$d%%</string>
+    <string name="rep_discrepancia">El modelo detectó «%1$s», distinto del tipo declarado por el ciudadano (%2$s). Requiere verificación de un administrador.</string>
+    <string name="rep_version_modelo">Clasificado con el modelo %1$s</string>
 
 </resources>

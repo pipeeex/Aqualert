@@ -30,11 +30,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/foto_demo_1" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:background="@drawable/bg_scrim_superior"
+            app:layout_constraintEnd_toEndOf="@id/imgEvidencia"
+            app:layout_constraintStart_toStartOf="@id/imgEvidencia"
+            app:layout_constraintTop_toTopOf="@id/imgEvidencia" />
+
         <!-- Etiqueta de estado sobre la imagen -->
         <TextView
             android:id="@+id/txtEstado"
             style="@style/Widget.Aqualert.EstadoBadge"
-            android:layout_margin="@dimen/space_s"
+            android:layout_margin="@dimen/space_m"
             android:backgroundTint="@color/estado_publicado"
             app:layout_constraintStart_toStartOf="@id/imgEvidencia"
             app:layout_constraintTop_toTopOf="@id/imgEvidencia"
@@ -44,7 +52,7 @@
         <TextView
             android:id="@+id/txtUrgente"
             style="@style/Widget.Aqualert.EstadoBadge"
-            android:layout_margin="@dimen/space_s"
+            android:layout_margin="@dimen/space_m"
             android:backgroundTint="@color/state_danger"
             android:text="@string/rep_urgente"
             android:visibility="gone"

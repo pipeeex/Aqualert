@@ -22,6 +22,7 @@ import java.util.Locale
 import com.aqualer.app.util.aplicarInsetSuperior
 import com.aqualer.app.util.cargarEvidencia
 import com.aqualer.app.util.ANCHO_DETALLE
+import com.google.android.material.chip.Chip
 
 /**
  * Reune en una sola pantalla la evidencia, los datos del reporte, el
@@ -46,6 +47,8 @@ class DetalleReporteActivity : AppCompatActivity() {
         binding = ActivityDetalleReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbar.aplicarInsetSuperior()
+        binding.toolbar.aplicarInsetSuperior()
+        binding.zonaInsignias.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID).orEmpty()
         if (idReporte.isBlank()) {
@@ -116,20 +119,26 @@ class DetalleReporteActivity : AppCompatActivity() {
 
     private fun observarViewModel() {
 
-        viewModel.reporte.observe(this) { estado ->
-            when (estado) {
-                is Recurso.Cargando -> binding.progreso.visibility = View.VISIBLE
+        viewModel.usuario.observe(this) {
+            val puedeComentar = viewModel.puedeComentar()
 
-                is Recurso.Exito -> {
-                    binding.progreso.visibility = View.GONE
-                    binding.contenido.visibility = View.VISIBLE
-                    pintarReporte(estado.datos)
-                }
+            binding.zonaComentario.visibility =
+                if (puedeComentar) View.VISIBLE else View.GONE
+            binding.txtAvisoSesion.visibility =
+                if (puedeComentar) View.GONE else View.VISIBLE
 
-                is Recurso.Error -> {
-                    binding.progreso.visibility = View.GONE
-                    mostrarMensaje(estado.mensaje)
-                }
+            // El visitante no puede comentar porque no tiene cuenta; el
+            // administrador porque su rol es moderar, no participar en
+            // la conversacion. Son dos razones distintas y el aviso
+            // debe decir cual aplica.
+            binding.txtAvisoSesion.setText(
+                if (viewModel.puedeModerar()) R.string.det_admin_no_comenta
+                else R.string.det_debes_iniciar
+            )
+
+            reporteActual?.let { reporte ->
+                binding.btnEditar.visibility =
+                    if (viewModel.puedeEditar(reporte)) View.VISIBLE else View.GONE
             }
         }
 
@@ -241,6 +250,57 @@ class DetalleReporteActivity : AppCompatActivity() {
         )
         binding.txtRevisionHumana.visibility =
             if (confiable) View.GONE else View.VISIBLE
+
+        pintarEtiquetasAlternativas(reporte)
+        pintarDiscrepancia(reporte)
+
+        binding.txtVersionModelo.visibility =
+            if (reporte.versionModeloIa.isBlank()) View.GONE else View.VISIBLE
+        binding.txtVersionModelo.text =
+            getString(R.string.rep_version_modelo, reporte.versionModeloIa)
+    }
+    private fun pintarEtiquetasAlternativas(reporte: Reporte) {
+        val alternativas = reporte.etiquetasIa
+            .filterKeys { !it.equals(reporte.clasificacionIa, ignoreCase = true) }
+            .entries
+            .sortedByDescending { it.value }
+
+        binding.grupoEtiquetas.removeAllViews()
+
+        val hayAlternativas = alternativas.isNotEmpty()
+        binding.grupoEtiquetas.visibility =
+            if (hayAlternativas) View.VISIBLE else View.GONE
+        binding.txtOtrasEtiquetas.visibility =
+            if (hayAlternativas) View.VISIBLE else View.GONE
+
+        alternativas.forEach { (nombre, confianza) ->
+            val distintivo = Chip(this).apply {
+                text = getString(
+                    R.string.rep_etiqueta_chip,
+                    nombre,
+                    (confianza * 100).toInt()
+                )
+                // Es informativo, no un control: no debe invitar al toque
+                isClickable = false
+                isCheckable = false
+                isFocusable = false
+            }
+            binding.grupoEtiquetas.addView(distintivo)
+        }
+    }
+
+    private fun pintarDiscrepancia(reporte: Reporte) {
+        val mostrar = reporte.hayDiscrepanciaIa && reporte.clasificacionConfiable
+
+        binding.txtDiscrepancia.visibility = if (mostrar) View.VISIBLE else View.GONE
+
+        if (mostrar) {
+            binding.txtDiscrepancia.text = getString(
+                R.string.rep_discrepancia,
+                reporte.clasificacionIa,
+                reporte.tipo.etiqueta
+            )
+        }
     }
 
     private fun mostrarMensaje(mensaje: String) {

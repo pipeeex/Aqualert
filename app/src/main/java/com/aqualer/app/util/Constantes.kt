@@ -26,7 +26,7 @@ object Constantes {
     const val UMBRAL_CONFIANZA_IA = 0.70f
 
     /** Version del modelo de clasificacion en uso. */
-    const val VERSION_MODELO_IA = "1.0.0-stub"
+    const val VERSION_MODELO_IA = "1.0-tm"
 
     // ===== Validaciones (RNF007: integridad de los datos) =====
     const val MIN_LONGITUD_PASSWORD = 6

@@ -1,0 +1,5 @@
+0 canal_limpio
+1 espumas
+2 no_es_agua
+3 residuos_solidos
+4 vertimiento

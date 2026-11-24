@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aqualer.app.data.estado.RolUsuario
 import com.aqualer.app.data.model.Comentario
 import com.aqualer.app.data.model.HistorialEstado
 import com.aqualer.app.data.model.Reporte
@@ -95,7 +96,6 @@ class DetalleReporteViewModel(
             _operacion.value = Recurso.Error("Debes iniciar sesion para comentar")
             return
         }
-
         _operacion.value = Recurso.Cargando
         viewModelScope.launch {
             val comentario = Comentario(

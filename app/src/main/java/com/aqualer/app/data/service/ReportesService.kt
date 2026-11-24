@@ -24,7 +24,19 @@ class ReportesService(
 ) {
 
     private val coleccion get() = db.collection(Constantes.COL_REPORTES)
+    private var clasificadorIA: ClasificadorIA? = null
 
+    private fun clasificador(contexto: Context?): ClasificadorIA {
+        clasificadorIA?.let { return it }
+
+        val nuevo = if (contexto != null) {
+            ClasificadorIATensorFlow(contexto)
+        } else {
+            ClasificadorIAService()
+        }
+        clasificadorIA = nuevo
+        return nuevo
+    }
 
     suspend fun crear(
         reporte: Reporte,
@@ -52,7 +64,7 @@ class ReportesService(
                 )
 
                 // 2. clasificarImagen()
-                val resultado = clasificador.clasificarImagen(
+                val resultado = clasificador(contexto).clasificarImagen(
                     referenciaImagen = reporte.imagenUrl,
                     tipoDeclarado = reporte.tipo
                 )
@@ -84,7 +96,12 @@ class ReportesService(
                         id = idReporte,
                         estado = estadoFinal,
                         clasificacionIa = resultado.clasificacion,
-                        confianzaIa = resultado.confianza
+                        confianzaIa = resultado.confianza,
+
+                        etiquetasIa = resultado.etiquetas
+                                .take(3)
+                            .associate { it.nombre to it.confianza },
+                        versionModeloIa = resultado.versionModelo
                     )
                     generarAlertaSiAplica(publicado, contexto)
                     Recurso.Exito(idReporte)

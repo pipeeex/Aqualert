@@ -42,6 +42,12 @@ android {
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$uploadPreset\"")
     }
 
+    androidResources {
+        // El modelo se lee como MappedByteBuffer: debe quedar sin
+        // comprimir dentro del APK o TensorFlow no puede abrirlo
+        noCompress += "tflite"
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -74,6 +80,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // Clasificacion de imagenes en el dispositivo (RF005).
+    implementation("org.tensorflow:tensorflow-lite:2.16.1")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
     // --- Ciclo de vida y ViewModel (MVVM: RNF006 escalabilidad, RNF008 mantenibilidad) ---
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")

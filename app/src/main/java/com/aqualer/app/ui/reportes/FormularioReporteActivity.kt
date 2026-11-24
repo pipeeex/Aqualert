@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import com.aqualer.app.util.mostrarPunto
 import com.aqualer.app.util.prepararComoVistaPrevia
+import com.aqualer.app.data.service.MotorClasificacion
 
 /**
  * Formulario de creacion y edicion de reportes (RF0003).
@@ -169,6 +170,21 @@ class FormularioReporteActivity : AppCompatActivity() {
         uriSeleccionada = uri
         binding.imgEvidencia.cargarUriLocal(uri)
         actualizarEstadoFoto(hayFoto = true)
+
+        // TEMPORAL: verificacion del modelo en Logcat
+        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+            val motor = MotorClasificacion(applicationContext)
+            if (motor.cargar()) {
+                motor.bitmapDesde(uri)?.let { bmp ->
+                    motor.clasificar(bmp).forEach {
+                        android.util.Log.d("IA", "${it.etiqueta}: ${"%.1f".format(it.confianza * 100)}%")
+                    }
+                }
+            } else {
+                android.util.Log.e("IA", "El modelo no cargo")
+            }
+            motor.close()
+        }
     }
 
     private fun actualizarEstadoFoto(hayFoto: Boolean) {

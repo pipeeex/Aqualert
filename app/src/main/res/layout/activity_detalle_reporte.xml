@@ -53,23 +53,43 @@
                     android:scaleType="centerCrop"
                     tools:src="@drawable/foto_demo_1" />
 
-                <TextView
-                    android:id="@+id/txtEstado"
-                    style="@style/Widget.Aqualert.EstadoBadge"
-                    android:layout_gravity="top|start"
-                    android:layout_margin="@dimen/space_m"
-                    android:backgroundTint="@color/estado_publicado"
-                    tools:text="Publicado" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/bg_scrim_superior" />
 
-                <TextView
-                    android:id="@+id/txtUrgente"
-                    style="@style/Widget.Aqualert.EstadoBadge"
-                    android:layout_gravity="top|end"
-                    android:layout_margin="@dimen/space_m"
-                    android:backgroundTint="@color/state_danger"
-                    android:text="@string/rep_urgente"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                <!-- Franja de insignias: las mantiene alineadas entre si
+                     y fuera del alcance de la barra de estado -->
+                <LinearLayout
+                    android:id="@+id/zonaInsignias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_m">
+
+                    <TextView
+                        android:id="@+id/txtEstado"
+                        style="@style/Widget.Aqualert.EstadoBadge"
+                        android:backgroundTint="@color/estado_publicado"
+                        tools:text="Publicado" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/txtUrgente"
+                        style="@style/Widget.Aqualert.EstadoBadge"
+                        android:layout_marginStart="@dimen/space_s"
+                        android:backgroundTint="@color/state_danger"
+                        android:text="@string/rep_urgente"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
             </FrameLayout>
 
             <!-- ===== Datos del reporte ===== -->
@@ -205,61 +225,117 @@
                     android:orientation="vertical"
                     android:padding="@dimen/space_l">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="@dimen/space_s"
-                        android:gravity="center_vertical"
-                        android:text="@string/det_analisis"
-                        android:textAppearance="@style/TextAppearance.Aqualert.Subtitle"
-                        app:drawableStartCompat="@drawable/ic_ia" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_m"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_l">
 
                         <TextView
-                            android:id="@+id/txtClasificacion"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.Aqualert.Body"
-                            tools:text="basuras" />
-
-                        <TextView
-                            android:id="@+id/txtConfianza"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/neutral_grey130"
-                            android:textSize="@dimen/text_body"
-                            tools:text="Confianza: 87%" />
+                            android:drawablePadding="@dimen/space_s"
+                            android:gravity="center_vertical"
+                            android:text="@string/det_analisis"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Subtitle"
+                            app:drawableStartCompat="@drawable/ic_ia" />
+
+                        <!-- Clase detectada y confianza, en una sola fila -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_m"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtClasificacion"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAppearance="@style/TextAppearance.Aqualert.Body"
+                                tools:text="basuras" />
+
+                            <TextView
+                                android:id="@+id/txtConfianza"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_s"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/neutral_grey130"
+                                android:textSize="@dimen/text_body"
+                                tools:text="Confianza: 87%" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/barraConfianza"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="@dimen/space_s"
+                            android:max="100"
+                            android:progressTint="@color/state_success"
+                            tools:progress="87" />
+
+                        <!-- Otras clases que el modelo considero -->
+                        <TextView
+                            android:id="@+id/txtOtrasEtiquetas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_l"
+                            android:text="@string/rep_otras_etiquetas"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/grupoEtiquetas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_xs"
+                            android:visibility="gone"
+                            app:chipSpacingVertical="0dp"
+                            app:singleLine="false"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/txtRevisionHumana"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_m"
+                            android:background="@drawable/bg_chip_suave"
+                            android:padding="@dimen/space_s"
+                            android:text="@string/det_revision_humana"
+                            android:textColor="@color/estado_en_atencion"
+                            android:textSize="@dimen/text_caption"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                        <!-- Lo detectado no coincide con lo declarado -->
+                        <TextView
+                            android:id="@+id/txtDiscrepancia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_l"
+                            android:background="@color/state_warning_bg"
+                            android:lineSpacingExtra="2dp"
+                            android:padding="@dimen/space_m"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                            android:visibility="gone"
+                            tools:text="El modelo detectó «espumas», distinto del tipo declarado por el ciudadano (Basuras y residuos sólidos). Requiere verificación de un administrador."
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/txtVersionModelo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_m"
+                            android:alpha="0.7"
+                            android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                            android:visibility="gone"
+                            tools:text="Clasificado con el modelo 1.0-tm"
+                            tools:visibility="visible" />
                     </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/barraConfianza"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="6dp"
-                        android:layout_marginTop="@dimen/space_s"
-                        android:max="100"
-                        android:progressTint="@color/state_success"
-                        tools:progress="87" />
-
-                    <TextView
-                        android:id="@+id/txtRevisionHumana"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_s"
-                        android:background="@drawable/bg_chip_suave"
-                        android:padding="@dimen/space_s"
-                        android:text="@string/det_revision_humana"
-                        android:textColor="@color/estado_en_atencion"
-                        android:textSize="@dimen/text_caption"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
