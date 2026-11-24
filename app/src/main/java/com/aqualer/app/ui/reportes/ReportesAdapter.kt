@@ -12,6 +12,7 @@ import com.aqualer.app.data.model.Reporte
 import com.aqualer.app.util.FotosDemo
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.aqualer.app.util.cargarEvidencia
 
 /**
  * Adaptador del listado de reportes (RF0002: Visualizacion de reportes).
@@ -45,10 +46,7 @@ class ReportesAdapter(
         fun enlazar(reporte: Reporte) {
             val contexto = binding.root.context
 
-            // ImageView: evidencia fotografica simulada
-            binding.imgEvidencia.setImageResource(
-                FotosDemo.drawableDesde(reporte.imagenUrl)
-            )
+            binding.imgEvidencia.cargarEvidencia(reporte.imagenUrl)
 
             binding.txtTitulo.text = reporte.titulo
             binding.txtDescripcion.text = reporte.descripcion

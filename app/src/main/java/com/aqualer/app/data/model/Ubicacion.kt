@@ -7,6 +7,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import java.util.Locale
 
 /**
  * Objeto de valor que agrupa la georreferenciacion de un reporte.
@@ -19,8 +20,8 @@ import kotlin.math.sqrt
  */
 @Parcelize
 data class Ubicacion(
-    val lat: Double = Constantes.BOGOTA_LAT,
-    val lng: Double = Constantes.BOGOTA_LNG,
+    val lat: Double = 0.0,
+    val lng: Double = 0.0,
     val direccion: String = ""
 ) : Parcelable {
 
@@ -28,6 +29,11 @@ data class Ubicacion(
     val esValida: Boolean
         get() = lat in -90.0..90.0 && lng in -180.0..180.0 &&
                 !(lat == 0.0 && lng == 0.0)
+
+    val coordenadasLegibles: String
+        get() = if (esValida) {
+            String.format(Locale.US, "%.5f, %.5f", lat, lng)
+        } else ""
 
     /** Texto corto de coordenadas para mostrar cuando no hay direccion. */
     fun comoTexto(): String =

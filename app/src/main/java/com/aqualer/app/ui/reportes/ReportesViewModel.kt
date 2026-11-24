@@ -11,6 +11,9 @@ import com.aqualer.app.data.service.AuthService
 import com.aqualer.app.data.service.ReportesService
 import com.aqualer.app.util.Recurso
 import kotlinx.coroutines.launch
+import android.net.Uri
+import com.aqualer.app.data.service.StorageService
+import com.aqualer.app.data.model.ResultadoValidacion
 
 /**
  * Expone las cuatro operaciones del CRUD que definen la clase Reporte:
@@ -18,7 +21,8 @@ import kotlinx.coroutines.launch
  */
 class ReportesViewModel(
     private val reportesService: ReportesService = ReportesService(),
-    private val authService: AuthService = AuthService()
+    private val authService: AuthService = AuthService(),
+    private val storageService: StorageService = StorageService()
 ) : ViewModel() {
 
     /** Listado de reporte. */
@@ -36,6 +40,10 @@ class ReportesViewModel(
     /** Usuario autenticado, necesario para registrar la autoria. */
     private val _usuario = MutableLiveData<Usuario>()
     val usuario: LiveData<Usuario> = _usuario
+
+    /** Etapa en curso, para informar que esta pasando durante la espera. */
+    private val _etapa = MutableLiveData<String?>()
+    val etapa: LiveData<String?> = _etapa
 
     init {
         cargarUsuario()
@@ -81,26 +89,58 @@ class ReportesViewModel(
     // ===================== CREATE =====================
 
     /** crear(): guarda un reporte nuevo asociado al usuario actual. */
-    fun crearReporte(reporte: Reporte, contexto: Context? = null) {
+    fun crearReporte(reporte: Reporte, uriImagen: Uri?, contexto: Context) {
         val actual = _usuario.value
         if (actual == null || !actual.rol.puedeCrearReportes) {
             _operacion.value = Recurso.Error("Debes iniciar sesion para crear un reporte")
             return
         }
 
+        // 1. Texto y ubicacion
+        val validacion = reporte.validar(incluirImagen = false)
+        if (validacion is ResultadoValidacion.Invalido) {
+            _operacion.value = Recurso.Error(validacion.primerError)
+            return
+        }
+
+        // 2. Evidencia
+        if (uriImagen == null) {
+            _operacion.value = Recurso.Error("Debes adjuntar una foto de evidencia")
+            return
+        }
+
+        // 3. Ya con todo correcto, se sube
         _operacion.value = Recurso.Cargando
         viewModelScope.launch {
-            val conAutor = reporte.copy(
+            _etapa.value = "subiendo"
+
+            val url = when (val subida = storageService.subirImagen(contexto, uriImagen)) {
+                is Recurso.Exito -> subida.datos
+                is Recurso.Error -> {
+                    _etapa.value = null
+                    _operacion.value = subida
+                    return@launch
+                }
+                else -> return@launch
+            }
+
+            _etapa.value = "analizando"
+
+            val completo = reporte.copy(
                 uidUsuario = actual.id,
-                nombreUsuario = actual.nombre
+                nombreUsuario = actual.nombre,
+                imagenUrl = url
             )
-            _operacion.value = when (val resultado = reportesService.crear(conAutor, contexto)) {
+
+            _operacion.value = when (val r = reportesService.crear(completo, contexto)) {
                 is Recurso.Exito -> Recurso.Exito("Reporte analizado y publicado correctamente")
-                is Recurso.Error -> resultado
+                is Recurso.Error -> r
                 else -> Recurso.Cargando
             }
+            _etapa.value = null
         }
     }
+
 
     /** editarYReintentar(): reenvia a clasificacion un reporte rechazado. */
     fun reintentarClasificacion(reporte: Reporte, contexto: Context? = null) {
@@ -119,12 +159,37 @@ class ReportesViewModel(
     // ===================== UPDATE =====================
 
     /** actualizar(): guarda los cambios de un reporte existente. */
-    fun actualizarReporte(reporte: Reporte) {
+    fun actualizarReporte(reporte: Reporte, uriImagen: Uri?, contexto: Context) {
+
+        val validacion = reporte.validar(incluirImagen = false)
+        if (validacion is ResultadoValidacion.Invalido) {
+            _operacion.value = Recurso.Error(validacion.primerError)
+            return
+        }
+
         _operacion.value = Recurso.Cargando
         viewModelScope.launch {
-            _operacion.value = when (val resultado = reportesService.actualizar(reporte)) {
+            var url = reporte.imagenUrl
+            if (uriImagen != null) {
+                _etapa.value = "subiendo"
+                when (val subida = storageService.subirImagen(contexto, uriImagen)) {
+                    is Recurso.Exito -> url = subida.datos
+                    is Recurso.Error -> {
+                        _etapa.value = null
+                        _operacion.value = subida
+                        return@launch
+                    }
+                    else -> return@launch
+                }
+            }
+
+            _etapa.value = null
+
+            _operacion.value = when (
+                val r = reportesService.actualizar(reporte.copy(imagenUrl = url))
+            ) {
                 is Recurso.Exito -> Recurso.Exito("Reporte actualizado correctamente")
-                is Recurso.Error -> resultado
+                is Recurso.Error -> r
                 else -> Recurso.Cargando
             }
         }

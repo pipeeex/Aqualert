@@ -20,6 +20,11 @@
     <!-- Notificaciones push -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- OSMDroid descarga las teselas del mapa por red -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -34,10 +39,6 @@
         android:theme="@style/Theme.Aqualert"
         tools:targetApi="31">
 
-        <!-- Clave de Google Maps inyectada desde local.properties -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
 
         <!-- Pantalla de arranque: decide entre Login y Main -->
         <activity

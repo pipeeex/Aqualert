@@ -13,11 +13,20 @@ import com.aqualer.app.data.model.Reporte
 import com.aqualer.app.data.model.Ubicacion
 import com.aqualer.app.databinding.ActivityFormularioReporteBinding
 import com.aqualer.app.util.Constantes
-import com.aqualer.app.util.FotosDemo
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
-import kotlin.random.Random
 import com.aqualer.app.util.aplicarInsetSuperior
+import android.net.Uri
+import com.aqualer.app.util.SelectorImagen
+import com.aqualer.app.util.cargarEvidencia
+import com.aqualer.app.util.cargarUriLocal
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.aqualer.app.data.service.UbicacionService
+import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
+import com.aqualer.app.util.mostrarPunto
+import com.aqualer.app.util.prepararComoVistaPrevia
 
 /**
  * Formulario de creacion y edicion de reportes (RF0003).
@@ -46,20 +55,35 @@ class FormularioReporteActivity : AppCompatActivity() {
     private var reporteActual: Reporte? = null
 
     /** Indice de la evidencia simulada seleccionada. */
-    private var indiceFoto = 0
+    private var uriSeleccionada: Uri? = null
+
+    /** Selector de camara y galeria (UC6). */
+    private val selector = SelectorImagen(this) { uri -> mostrarFotoElegida(uri) }
 
     /** Ubicacion simulada del reporte. */
     private var ubicacion = Ubicacion()
 
+    private val ubicacionService by lazy { UbicacionService(applicationContext) }
+
+    /** Permiso de ubicacion en tiempo de ejecucion (UC7). */
+    private val permisoUbicacion = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { concedidos ->
+        if (concedidos.values.any { it }) obtenerUbicacion()
+        else mostrarMensaje(getString(R.string.rep_ubicacion_sin_permiso))
+    }
     private val modoEdicion: Boolean get() = idReporte != null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormularioReporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.mapaUbicacion.prepararComoVistaPrevia()
         binding.toolbar.aplicarInsetSuperior()
 
         idReporte = intent.getStringExtra(Constantes.EXTRA_REPORTE_ID)
+
+        selector.registrar()          // debe ir antes de que arranque la Activity
 
         configurarListaDesplegable()
         configurarEvidencia()
@@ -73,8 +97,18 @@ class FormularioReporteActivity : AppCompatActivity() {
             viewModel.cargarReporte(idReporte!!)
         } else {
             binding.toolbar.title = getString(R.string.rep_crear_titulo)
-            generarUbicacionSimulada()
+            solicitarUbicacion()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapaUbicacion.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapaUbicacion.onPause()
     }
 
     // ==========================================================
@@ -119,30 +153,30 @@ class FormularioReporteActivity : AppCompatActivity() {
     }
 
     // ==========================================================
-    //  ImageView: evidencia simulada
+    //  ImageView:
     // ==========================================================
 
     private fun configurarEvidencia() {
-        mostrarEvidencia()
+        actualizarEstadoFoto(hayFoto = false)
 
-        // Sustituye a UC6 "Tomar o seleccionar foto": rota entre las muestras
-        binding.btnCambiarFoto.setOnClickListener {
-            indiceFoto = (indiceFoto + 1) % FotosDemo.cantidad
-            mostrarEvidencia()
-        }
-
-        binding.imgEvidencia.setOnClickListener {
-            indiceFoto = (indiceFoto + 1) % FotosDemo.cantidad
-            mostrarEvidencia()
-        }
+        // "Tomar o seleccionar foto" del diagrama de casos de uso
+        binding.btnFoto.setOnClickListener { selector.mostrarOpciones() }
+        binding.imgEvidencia.setOnClickListener { selector.mostrarOpciones() }
     }
 
-    private fun mostrarEvidencia() {
-        binding.imgEvidencia.setImageResource(FotosDemo.drawablePorIndice(indiceFoto))
-        binding.txtContadorFoto.text = getString(
-            R.string.rep_evidencia_contador,
-            indiceFoto + 1,
-            FotosDemo.cantidad
+    /** Muestra la foto recien elegida, todavia sin subir. */
+    private fun mostrarFotoElegida(uri: Uri) {
+        uriSeleccionada = uri
+        binding.imgEvidencia.cargarUriLocal(uri)
+        actualizarEstadoFoto(hayFoto = true)
+    }
+
+    private fun actualizarEstadoFoto(hayFoto: Boolean) {
+        binding.txtEstadoFoto.text = getString(
+            if (hayFoto) R.string.rep_foto_lista else R.string.rep_sin_foto
+        )
+        binding.btnFoto.text = getString(
+            if (hayFoto) R.string.rep_cambiar_foto else R.string.rep_agregar_foto
         )
     }
 
@@ -151,27 +185,52 @@ class FormularioReporteActivity : AppCompatActivity() {
     // ==========================================================
 
     /**
-     * Genera coordenadas dentro de Bogota.
-     * Reemplaza temporalmente a obtenerUbicacion() con GPS (UC7).
+     * Pide el permiso de ubicacion si hace falta y lanza la lectura
+     * del GPS (UC7: Georreferenciar el reporte).
      */
-    private fun generarUbicacionSimulada() {
-        val lat = Constantes.BOGOTA_LAT + Random.nextDouble(-0.05, 0.05)
-        val lng = Constantes.BOGOTA_LNG + Random.nextDouble(-0.05, 0.05)
-        ubicacion = Ubicacion(
-            lat = lat,
-            lng = lng,
-            direccion = "Bogota, sector simulado"
-        )
-        mostrarUbicacion()
+    private fun solicitarUbicacion() {
+        if (ubicacionService.tienePermiso()) {
+            obtenerUbicacion()
+        } else {
+            permisoUbicacion.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun obtenerUbicacion() {
+        binding.txtUbicacion.text = getString(R.string.rep_obteniendo_ubicacion)
+
+        lifecycleScope.launch {
+            when (val resultado = ubicacionService.obtenerUbicacionActual()) {
+                is Recurso.Exito -> {
+                    ubicacion = resultado.datos
+                    mostrarUbicacion()
+                }
+                is Recurso.Error -> {
+                    mostrarMensaje(resultado.mensaje)
+                    mostrarUbicacion()
+                }
+                else -> Unit
+            }
+        }
     }
 
     private fun mostrarUbicacion() {
-        binding.txtUbicacion.text = String.format(
-            "%s  (%.5f, %.5f)",
-            ubicacion.direccion,
-            ubicacion.lat,
-            ubicacion.lng
-        )
+        if (ubicacion.esValida) {
+            binding.txtUbicacion.text = ubicacion.comoTexto()
+
+            // El mapa confirma visualmente que el punto es el correcto:
+            // una direccion en texto puede ser ambigua, un marcador no
+            binding.contenedorMapa.visibility = View.VISIBLE
+            binding.mapaUbicacion.mostrarPunto(ubicacion)
+        } else {
+            binding.txtUbicacion.text = getString(R.string.rep_ubicacion)
+            binding.contenedorMapa.visibility = View.GONE
+        }
     }
 
     // ==========================================================
@@ -181,8 +240,7 @@ class FormularioReporteActivity : AppCompatActivity() {
     private fun configurarAcciones() {
         binding.toolbar.setNavigationOnClickListener { finish() }
 
-        binding.btnSimularUbicacion.setOnClickListener { generarUbicacionSimulada() }
-
+        binding.btnSimularUbicacion.setOnClickListener { solicitarUbicacion() }
         binding.btnGuardar.setOnClickListener { guardar() }
 
         binding.btnEliminar.setOnClickListener {
@@ -202,12 +260,14 @@ class FormularioReporteActivity : AppCompatActivity() {
             nivelRiesgo = riesgoSeleccionado(),
             atencionUrgente = binding.checkUrgente.isChecked,
             publicarAnonimo = binding.checkAnonimo.isChecked,
-            imagenUrl = FotosDemo.identificador(indiceFoto),
             ubicacion = ubicacion
         )
 
-        if (modoEdicion) viewModel.actualizarReporte(reporte)
-        else viewModel.crearReporte(reporte, applicationContext)
+        if (modoEdicion) {
+            viewModel.actualizarReporte(reporte, uriSeleccionada, applicationContext)
+        } else {
+            viewModel.crearReporte(reporte, uriSeleccionada, applicationContext)
+        }
     }
 
     private fun confirmarEliminacion(reporte: Reporte) {
@@ -224,7 +284,22 @@ class FormularioReporteActivity : AppCompatActivity() {
     // ==========================================================
     //  Observadores
     // ==========================================================
+    private fun marcarError(mensaje: String) {
+        binding.tilTitulo.error = null
+        binding.tilDescripcion.error = null
 
+        when {
+            mensaje.contains("titulo", true) -> {
+                binding.tilTitulo.error = mensaje
+                binding.tilTitulo.requestFocus()
+            }
+            mensaje.contains("descripcion", true) -> {
+                binding.tilDescripcion.error = mensaje
+                binding.tilDescripcion.requestFocus()
+            }
+            else -> mostrarMensaje(mensaje)
+        }
+    }
     private fun observarViewModel() {
 
         // Carga del reporte en modo edicion
@@ -257,8 +332,16 @@ class FormularioReporteActivity : AppCompatActivity() {
 
                 is Recurso.Error -> {
                     mostrarCargando(false)
-                    mostrarMensaje(estado.mensaje)
+                    marcarError(estado.mensaje)
                 }
+            }
+        }
+        viewModel.etapa.observe(this) { etapa ->
+            binding.txtEtapa.visibility = if (etapa == null) View.GONE else View.VISIBLE
+            binding.txtEtapa.text = when (etapa) {
+                "subiendo" -> getString(R.string.rep_subiendo)
+                "analizando" -> getString(R.string.rep_analizando)
+                else -> ""
             }
         }
     }
@@ -281,8 +364,8 @@ class FormularioReporteActivity : AppCompatActivity() {
         binding.checkAnonimo.isChecked = reporte.publicarAnonimo
 
         // ImageView
-        indiceFoto = FotosDemo.indiceDesde(reporte.imagenUrl)
-        mostrarEvidencia()
+        binding.imgEvidencia.cargarEvidencia(reporte.imagenUrl)
+        actualizarEstadoFoto(hayFoto = reporte.imagenUrl.isNotBlank())
 
         ubicacion = reporte.ubicacion
         mostrarUbicacion()

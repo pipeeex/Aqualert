@@ -1,3 +1,15 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+// Gradle no carga local.properties por su cuenta: solo lee de ahi la
+// ruta del SDK. Para usar credenciales que no deben ir al repositorio
+// hay que leer el archivo explicitamente.
+val propiedadesLocales = Properties().apply {
+    val archivo = rootProject.file("local.properties")
+    if (archivo.exists()) {
+        FileInputStream(archivo).use { load(it) }
+    }
+}
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -23,6 +35,11 @@ android {
         // La API key de Google Maps se lee de local.properties (no se sube a Git)
         val mapsKey: String = project.findProperty("MAPS_API_KEY") as String? ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsKey
+        val cloudName = propiedadesLocales.getProperty("CLOUDINARY_CLOUD_NAME") ?: ""
+        val uploadPreset = propiedadesLocales.getProperty("CLOUDINARY_UPLOAD_PRESET") ?: ""
+
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudName\"")
+        buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$uploadPreset\"")
     }
 
     buildTypes {
@@ -43,7 +60,10 @@ android {
 
     kotlinOptions { jvmTarget = "17" }
 
-    buildFeatures { viewBinding = true }
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -74,8 +94,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-analytics")
 
-    // --- Google Maps + Ubicacion ---
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    // --- OpenStreetMap + Ubicacion ---
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // --- Corrutinas ---

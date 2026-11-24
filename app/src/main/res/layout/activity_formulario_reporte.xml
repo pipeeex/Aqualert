@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_s"
-                android:text="@string/rep_evidencia_ayuda"
+                android:text="@string/rep_evidencia_ayuda_real"
                 android:textAppearance="@style/TextAppearance.Aqualert.Caption" />
 
             <com.google.android.material.card.MaterialCardView
@@ -92,21 +92,21 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCambiarFoto"
+                    android:id="@+id/btnFoto"
                     style="@style/Widget.Aqualert.Button.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/rep_cambiar_evidencia"
+                    android:text="@string/rep_agregar_foto"
                     app:icon="@drawable/ic_camara" />
 
                 <TextView
-                    android:id="@+id/txtContadorFoto"
+                    android:id="@+id/txtEstadoFoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_m"
                     android:textAppearance="@style/TextAppearance.Aqualert.Caption"
-                    tools:text="1 / 6" />
+                    tools:text="Evidencia adjunta" />
             </LinearLayout>
 
             <!-- =============== Datos del reporte =============== -->
@@ -264,7 +264,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- =============== Ubicacion simulada =============== -->
+            <!-- =============== Ubicacion  =============== -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -288,7 +288,27 @@
                 style="@style/Widget.Aqualert.Button.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rep_simular_ubicacion" />
+                android:text="@string/rep_ubicacion_actual" />
+
+            <!-- Vista previa cartografica del punto detectado -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/contenedorMapa"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="@dimen/space_m"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/radius_m"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/neutral_grey20"
+                app:strokeWidth="1dp"
+                tools:visibility="visible">
+
+                <org.osmdroid.views.MapView
+                    android:id="@+id/mapaUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.card.MaterialCardView>
+
 
             <!-- =============== Acciones =============== -->
             <com.google.android.material.button.MaterialButton
@@ -320,6 +340,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/space_l"
                 android:visibility="gone"
+                tools:visibility="visible" />
+            <TextView
+                android:id="@+id/txtEtapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Aqualert.Caption"
+                android:visibility="gone"
+                tools:text="Subiendo evidencia…"
                 tools:visibility="visible" />
 
         </LinearLayout>

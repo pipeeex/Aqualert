@@ -7,6 +7,9 @@ import android.os.Build
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.PersistentCacheSettings
+import org.osmdroid.config.Configuration
+import com.aqualer.app.util.Mapas
+import com.google.firebase.FirebaseApp
 
 /**
  * Clase Application de Aqualert.
@@ -22,6 +25,16 @@ class AqualertApp : Application() {
         super.onCreate()
         configurarFirestore()
         crearCanalNotificaciones()
+        FirebaseApp.initializeApp(this)
+        Mapas.configurar(this)
+    }
+
+    private fun configurarMapas() {
+        Configuration.getInstance().apply {
+            userAgentValue = packageName
+            osmdroidBasePath = cacheDir
+            osmdroidTileCache = cacheDir.resolve("teselas")
+        }
     }
 
     /**

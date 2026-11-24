@@ -96,7 +96,7 @@ data class Reporte(
      * Valida los campos obligatorios antes de enviar el reporte (RNF007).
      * El diagrama de estados exige foto + descripcion para salir de BORRADOR.
      */
-    fun validar(): ResultadoValidacion {
+    fun validar(incluirImagen: Boolean = true): ResultadoValidacion {
         val errores = mutableListOf<String>()
 
         if (titulo.trim().length < Constantes.MIN_LONGITUD_TITULO) {
@@ -111,11 +111,11 @@ data class Reporte(
         if (descripcion.trim().length > Constantes.MAX_LONGITUD_DESCRIPCION) {
             errores.add("La descripcion no puede superar ${Constantes.MAX_LONGITUD_DESCRIPCION} caracteres")
         }
-        if (imagenUrl.isBlank()) {
-            errores.add("Debes adjuntar una foto de evidencia")
-        }
         if (!ubicacion.esValida) {
             errores.add("Debes registrar la ubicacion del reporte")
+        }
+        if (incluirImagen && imagenUrl.isBlank()) {
+            errores.add("Debes adjuntar una foto de evidencia")
         }
 
         return if (errores.isEmpty()) ResultadoValidacion.Valido

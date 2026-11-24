@@ -211,4 +211,22 @@
     <string name="admin_aplicar">Aplicar cambio</string>
     <string name="ini_acceso_admin">Panel de administracion</string>
     <string name="ini_acceso_admin_desc">Verifica reportes y modera contenido</string>
+
+    <!-- ===== cAMARA REPORTE    ===== -->
+
+    <string name="rep_agregar_foto">Agregar foto</string>
+    <string name="rep_cambiar_foto">Cambiar foto</string>
+    <string name="rep_sin_foto">Sin evidencia adjunta</string>
+    <string name="rep_foto_lista">Evidencia adjunta</string>
+    <string name="rep_evidencia_ayuda_real">Toma una foto del problema o elige una de tu galeria</string>
+    <string name="rep_subiendo">Subiendo evidencia…</string>
+    <string name="rep_analizando">Analizando la imagen…</string>
+
+    <!-- ===== UBICACION mpas    ===== -->
+
+    <string name="rep_obteniendo_ubicacion">Obteniendo tu ubicacion…</string>
+    <string name="rep_ubicacion_sin_permiso">Concede el permiso de ubicacion</string>
+    <string name="rep_ubicacion_actual">Usar mi ubicacion</string>
+    <string name="rep_marcar_mapa">Marcar en el mapa</string>
+
 </resources>

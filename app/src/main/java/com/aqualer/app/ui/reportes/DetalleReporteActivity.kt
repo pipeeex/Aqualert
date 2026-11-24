@@ -15,12 +15,13 @@ import com.aqualer.app.data.estado.EstadoReporte
 import com.aqualer.app.data.model.Reporte
 import com.aqualer.app.databinding.ActivityDetalleReporteBinding
 import com.aqualer.app.util.Constantes
-import com.aqualer.app.util.FotosDemo
 import com.aqualer.app.util.Recurso
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.aqualer.app.util.aplicarInsetSuperior
+import com.aqualer.app.util.cargarEvidencia
+import com.aqualer.app.util.ANCHO_DETALLE
 
 /**
  * Reune en una sola pantalla la evidencia, los datos del reporte, el
@@ -180,9 +181,7 @@ class DetalleReporteActivity : AppCompatActivity() {
         reporteActual = reporte
 
         // --- Evidencia ---
-        binding.imgEvidencia.setImageResource(FotosDemo.drawableDesde(reporte.imagenUrl))
-
-        // --- Estado ---
+        binding.imgEvidencia.cargarEvidencia(reporte.imagenUrl, ANCHO_DETALLE)        // --- Estado ---
         binding.txtEstado.text = getString(reporte.estado.etiqueta)
         binding.txtEstado.backgroundTintList =
             ContextCompat.getColorStateList(this, reporte.estado.color)
